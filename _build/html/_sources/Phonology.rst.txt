@@ -1,0 +1,299 @@
+.. default-role:: word
+
+.. role:: raw-html(raw)
+   :format: html
+
+.. |break| replace:: :raw-html:`</span></td><td height="36"></td><span>`
+
+Sound patterns
+==============
+
+.. epigraph::
+   .. line-block::
+      `To citiāru ua panō né co co ‘olo‘ộlo.`
+      'In the beginning was the word.'
+
+   -- John 1:1
+
+Alphabet
+########
+
+The Nēa alphabet has fourteen letters: *‘ a c e h i l m n o p r t u.* The
+first letter is a turned apostrophe, and it is indeed a letter (representing a glottal
+stop) and not a punctuation mark. Spelling is mostly phonetic, and this small
+alphabet corresponds to a small inventory of vowel and consonant sounds --- 
+similar to that of Terrestrial languages like Hawai‘ian, though with the addition of
+tone. 
+
+There are six Nēa tones. Three are represented by vowels with an acute, macron, or
+circumflex accent: *á ā â*. The other three, called *broken* tones, are represented by
+these same accents combined with an underdot: *ạ́ ạ̄ ậ*.
+
+The letters *i* and *u* can also be marked with a dieresis: *ï ü*. This
+indicates that, although unstressed, the vowel is pronounced as a separate
+syllable and not as a glide or part of a diphthong.
+
+
+Consonants
+##########
+
+Nēa has eleven consonant phonemes:
+
+.. csv-table::
+   :align: center
+
+   **p**, **t**, **k**, **ʔ**
+   **m**, **n**,  , 
+   **w**, **l**, **j**, **h**
+    , **r**,  ,
+
+The phoneme **/k/** is spelled *c*. For English-speakers, this is a reminder
+of a pattern of allophony: before the front vowels **/e/** and **/i/** and the
+front glide **/j/**, this phoneme is pronounced **[s]**. 
+
+The glides **/w** **j/** are written *u i*. These letters do double-duty: if they
+come before another vowel letter and aren't stressed or marked with a dieresis,
+they are pronounced as glides; if they are stressed, are marked with a dieresis,
+or come before a consonant or the end of a word, they are pronounced as vowels.
+
+.. csv-table::
+   :widths: auto
+
+   `óio`,   **[ó.jo]**,   ‘oil’
+   `oío`,   **[o.í.o]**,  ‘listen!’
+   `éuta`,  **[é.u.tə]**, ‘avenue’
+   `‘Ánïa`, **[ʔá.ni.ə]**, men's name
+   `pạ́nia`, **[pə̰̀.ɲə]**,   'dry'
+
+Consonants other than **/w** **j/** can be followed by a **/w/** or a **/j/**
+to form a cluster.  The cluster **/kj/** is pronounced **[sj]** in careful speech but
+often becomes **[ʃ]** in fast speech. Similarly, **/nj/** and **/lj/** tend to become
+**[ɲ]** and **[ʎ]**.
+
+Vowels, stress, and tone
+########################
+
+Nēa has five phonemic vowel qualities, **/a e i o u/**, which can combine to form
+six diphthongs, **/ai ae au ao oe eo/**. In stressed syllables, vowels can be long
+as well as short. When unstressed, **/a/** is pronounced **[ɐ]**. The diphthongs **/ai au/**
+are pronounced **[ɐɪ ɐʊ]** even when stressed.
+
+Stressed syllables have tone. There are six possibilities. The first two (*sharp*)
+tones are found on short vowels, the second four (*level* and *rising*) tones
+on long vowels and diphthongs. Within each pair of tones, the second is *broken*, 
+meaning it has some sort of glottalization: either creaky voice or interruption 
+by a glottal stop.
+
+.. csv-table::
+   :widths: auto
+
+   *á*,  (clear) sharp,  **[á]**,  "short, high pitch"
+   *ạ́*,  broken sharp,   **[à̰]**,  "short, low pitch, creaky voice"
+   *ā*, (clear) level,   **[áá]**, "long, high pitch"
+   *ạ̄*, broken level,    **[áˀá]**, "long, high pitch, interrupted by a glottal stop"
+   *â*, (clear) rising,  **[aá]**, "long, mid-rising pitch"
+   *ậ*, broken rising,   **[à̰á]**, "long, low-rising pitch, creaky voice on first half"
+
+A single syllable with a broken vowel is sometimes easy to confuse with a pair of
+syllables separated by a glottal stop. The confusion is especially easy in the case of
+a broken vowel with level tone. The most audible distinction in this case is prosodic.
+A single broken level vowel has high pitch on both segments; when two vowels are
+separated by a glottal stop, there can only be high pitch on (at most) one. Consider
+these words, pronounced with the same segments but different melodies:
+
+.. csv-table::
+   
+   `‘ạ̄i`, **[ʔáˀí]**, ‘water’
+   `‘á‘i`,**[ʔá.ʔi]**, "‘judgment, perception'"
+   `‘a‘í`,**[ʔa.ʔí]**, ‘someday'
+
+Except for a few interjections like `ēō` ‘whoa!’, there can only be one stressed
+syllable in a prosodic word. But prosodic words do not match up one-to-one with 
+dictionary entries (called *lexical words*). Some lexical words --- especially
+onomatopoeia, loanwords, and compounds --- take up more than one prosodic word.
+
+.. csv-table::
+
+   `câ pâ`,      **[kaá paá]**,      ‘sound of small explosions’
+   `hēne pị́ti`,  **[héé.ne pḭí.ti]**, type of horse (from Skoa *ʃeːɲ ɓit*)
+   `muála ciọ́ho`,**[mwá.lɐ ʃò̰.ho]**, ‘buck dance’
+
+And on the other hand, some lexical words, called *clitics*, are short words that
+cannot make up a prosodic word on their own.
+
+Clitics
+#######
+
+A clitic does not form its own prosodic word, but is merged into a nearby word called
+its *host*. Clitics are often unstressed, but can sometimes have stress “pushed” onto
+them by their host. In the first group of examples below, the clitic `co` ‘the’ is stressless,
+and in the second group it has stress pushed onto it.
+
+.. csv-table::
+
+   `co tạ̄na‘i`,   **[ko.táˀá.nə.ʔi]**,  ‘the article’
+   `co cệpa`,     **[ko.sḛé.pə]**,      ‘the herbs’       |break|
+   `có muru`,     **[kó.mu.ru]**,       ‘the boy’
+   `cọ́ cu`,       **[kò̰.ku]**,          ‘the dog’
+
+There are two kinds of clitic. *Proclitics* --- like `co` above --- come before their
+hosts. In Nēa they are usually stressless but can have stress pushed onto them. *Enclitics*,
+like `‘u` and `tae` in the examples below, come after their hosts. They never have stress
+pushed onto them, and so are always unstressed. But they can trigger prosodic changes in
+the host itself. For instance, 'dance' is `ciọ́ho` when it does not host any enclitics, but
+iit becomes `ciohọ̄`, as in the second example below, when it does. They can also "pull"
+stress forward off of a proclitic that it was "pushed" onto. In `cị́ tama` 'my
+mat', the proclitic `ci` 'my' has stress pushed back onto it by the following
+noun, but adding the enclitic `u` pulls the stress forward again.
+
+.. csv-table::
+
+   `náta no ciọ́ho`,  **ná.tə.no.ʃò̰.ho**,    'you (pl) dance'
+   `to ciohọ̄ tae`, **to.ʃo.hóˀó.tae**,   'for you (pl) to dance'    |break|
+   `cị́ tama`, **sḭ̀.tə.mə**, 'my mat'
+   `ci tạ́ma ‘u`,  **si.tə̰̀.mə.ʔu**,    'our mats'
+   
+Enclitics in turn can be divided into two groups. The first are the *second position*
+enclitics. These are attached to the first available host in a particular group of
+words. The enclitics `‘u` and `tae` in the examples above are second position enclitics. 
+The host they attach to is the first word of two or more syllables in the noun or
+verb phrase they belong to. In EXPLAIN
+
+The other type of enclitic are *boundary* enclitics. These come at the end of a group
+of words no matter what. The remote enclitic `lo` is a boundary enclitic, and it stays
+at the end of the phrase even when there is an available host earlier that the
+second position enclitic `‘u` can attach to.
+
+.. csv-table::
+
+   `ci anête ‘u lo`,     **ʃə.neé.te.ʔu.lo**,       'our spears yonder'
+   `âpa ‘u ni anête lo`, **aá.pə.ʔu.ɲə.neé.te.lo**, 'those were our spears'
+
+   
+Prosodic paradigms
+##################
+
+Nēa originally had an entirely predictable pattern of mobile stress. A word
+was stressed on the third mora from the end, and if suffixes or
+enclitics were added then stress would shift as a result. This stress system
+eventually evolved into tone: sharp tone came from stressed short vowels,
+level tone from long vowels or diphthongs stressed on their first mora, and
+rising tone from long vowels or diphthongs stressed on their second mora.
+
+.. csv-table::
+
+   `*ʔémua`,  `‘émua`, 'table'  
+   `*cáapa`,  `cāpa`, 'vase'
+   `*paálaa`, `pâla`, 'ice'
+
+There may have been an intermediate period when tone was predictable just like
+the stress pattern it evolved out of. But this soon changed. Due to loanwords
+and sound changes, tone quickly became unpredictable. Possibly to compensate for
+this unpredictability, it also went through a large amount of regularization. 
+Where formerly a word would change its prosody *each* time a suffix or enclitic
+was added, in modern Nēa a word can only take a small number of prosodic shapes.
+
+The situation now is that a Nēa word has three stems, known as *independent*, 
+*dependent*, and *secondary*. For most words, the only difference between the stems
+is prosodic. For a few irregular words, there are additional changes from one
+stem to the next. 
+
+The independent stem is the citation form of the word, and is used when the word
+does not host any enclitics, as with `cāpa` in the first group of
+examples below. The dependent stem is used when enclitics are added, as with 
+`câpa` in the second group. And the secondary stem is used with certain suffixes, as
+with `capạ́-` in the last group. Forms based on the secondary stem do not change further 
+when enclitics are added --- as demonstrated by the very last example with the
+addition of `‘u`.
+
+.. csv-table::
+   
+   `co cāpa`,   'the vase'
+   `no cāpa`,   'it's a vase'
+   `âla ‘u ni cāpa`,  'it was our vase'       |break|
+   `ci câpa ‘u`,      'our vase'
+   `ni câpa ‘u`,      'it's our vase'
+   `co câpa ua nie`,  'and as for the vase…'  |break|
+   `co capạ́lu`,       'the big vase'
+   `co capạ́ro`,       'the damn vase'
+   `ni capạ́ro ‘u`,    'it's our damn vase'
+
+Regular Nēa nouns, verbs, and adjectives belong to one of seven classes. If you
+know the class of a word, you can predict how its prosody will change from one
+stem to another. For instance, class one words have dependent forms with level
+tone on the last syllable, and have subordinate forms with rising tone on the
+last syllable. There are eight additional classes for irregular verbs --- most of
+which have only a few verbs apiece. 
+
+Morphophonological history
+##########################
+
+The behavior of these word classes is explained by the history briefly described
+in the last section: they come from different stem shapes in an earlier stage
+of the language in which stress was predictable and length and glottalization
+were phonemic in all syllables. At that stage, the possible syllable nuclei were
+the ones shown in the table below.
+
+.. csv-table::
+
+   *a*, *aˀ*, *aa*, *ae*, *ai*, *ao*, *au*
+   *e*, *eˀ*, *ea*, *ee*, *ei*, *eo*, *eu*
+   *i*, *iˀ*, *ia*, *ie*, *ii*, *io*, *iu*
+   *o*, *oˀ*, *oa*, *oe*, *oi*, *oo*, *ou*
+   *u*, *uˀ*, *ua*, *ue*, *ui*, *uo*, *uu*
+
+Between that stage and modern Nēa, a few changes happened:
+
+  1. If stress fell on a *ˀ*, it was retracted onto the preceding vowel.
+  2. Glottalization moved to the stressed vowel: `*óyoˀ` → `*óˀyo` → `ọ́io` 'take'.
+     This allowed long vowels and diphthongs to be glottalized: `*ʔoóloˀ` → `*ʔoóˀlo`
+     → `'ộlo` 'say'.
+  3. Unstressed long vowels shortened: `*tíʔaa` → `tí‘a` 'uncle'.
+  4. Unstressed prevocalic `*i` `*u` became **/j w/** in all but a few
+     contexts: `*páˀnia` → `pạ́nia` **[pə̰̀.ɲə]** 'dry'. (In native vocabulary,
+     the dieresis marks reflexes of the few instances of `*i` and `*u` that
+     didn't go through this change: `*éˀlua` → `ẹ́lüa` 'set free',
+     pronounced **[ḛ̀.lu.a]** not **[ḛ̀.lwa]**.)
+
+After these changes came a great deal of regularization. A word's prosdy had always changed
+when a one-syllable enclitic was added, as in the second set of examples below. But
+originally it changed *further* when additional enclitics were added, as in the third
+set.
+
+.. csv-table::
+  
+   `*ci cáapa`,     'my vase'
+   `*cí tee`,       'my eye'      |break|
+   `*ci caápa ʔu`,  'our vases'
+   `*ci tée ʔu`,    'our eyes'    |break|
+   `*ci caapá ʔu wa`, 'as for our vases'
+   `*ci teé ʔu wa`, 'as for our eyes'
+
+In the modern language, this is no longer the case. The dependent form of the word ---
+drived from the form originally used before a one-syllable enclitic --- is now used
+before two or more enclitics as well.
+
+.. csv-table::
+
+   `ci cāpa`,     'my vase'
+   `cí te`,       'my eye'        |break|
+   `ci câpa ‘u`,  'our vases'
+   `ci tē ‘u`,    'our eyes'      |break|
+   `ci câpa ‘u ua`, 'as for our vases', n.b. `câpa` not `*capá`
+   `ci tē ‘u ua`, 'as for our eyes', n.b. `tē` not `tê`
+
+Word classes
+############
+
+
+
+.. lemma:: ciọ́ho 
+   
+   'dance'
+
+.. lemma:: ciohọ̄
+   :headword: ciọ́ho
+   :rel: dependent stem
+
+
+.. wordlist::

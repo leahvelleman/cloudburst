@@ -1,3 +1,5 @@
+""" Language, Level, and Form objects
+"""
 from typing import Optional
 
 class Level(object):
@@ -105,6 +107,10 @@ class Language(object):
         self.__dict__[name] = newlevel
         self.__makepathsfor(newlevel)
         self.__levels.append(newlevel)
+
+    def think(self):
+        """ foo """
+        pass
 
     def __makepathsfor(self, newlevel: Level) -> None:
         for level in self.__root.walk():

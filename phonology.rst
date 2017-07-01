@@ -37,38 +37,64 @@ syllable and not as a glide or part of a diphthong.
 Consonants
 ##########
 
-Nēa has eleven consonant phonemes:
+Nēa has elevent consonant phonemes:
 
 .. csv-table::
    :align: center
 
    **p**, **t**, **k**, **ʔ**
    **m**, **n**,  , 
-   **w**, **l**, **j**, **h**
-    , **r**,  ,
+   **w**, **l r**, **j** , **h**
 
 The phoneme **/k/** is spelled *c*. For English-speakers, this is a reminder
-of a pattern of allophony: before the front vowels **/e/** and **/i/** and the
-front glide **/j/**, this phoneme is pronounced **[s]**. 
+of a pattern of allophony: before the front vowels **/e/** and **/i/**,
+this phoneme is pronounced **[s]**. 
 
-The glides **/w** **j/** are written *u i*. These letters do double-duty: if they
-come before another vowel letter and aren't stressed or marked with a dieresis,
-they are pronounced as glides; if they are stressed, are marked with a dieresis,
-or come before a consonant or the end of a word, they are pronounced as vowels.
+The glides **/w j/** are written *u i*. These letters do double-duty, representing
+glides when they are unaccented and come before another vowel letter, and
+independent vowels when they have an accent mark or when they come before a
+consonant letter or at the end of a phrase.
 
 .. csv-table::
-   :widths: auto
 
+   `rérui`, **[ré.rwi]**, 'make noise'
    `óio`,   **[ó.jo]**,   ‘oil’
-   `oío`,   **[o.í.o]**,  ‘listen!’
-   `éuta`,  **[é.u.tə]**, ‘avenue’
+
+In fact, almost all instances of **/w j/** could just as easily be reanalyzed as 
+allophones of **/u i/**, since there is a regular alternation that turns unstressed
+**/u i/** into **/w j/** when they occur in prevocalic position. All that prevents
+this reanalysis --- which would bring the size of Nēa's consonant inventory
+down to nine --- is the existence of contrasts between **/wu/** and **/uu/**,
+**/wi/** and **/uj/**, and so on, including some minimal or near-minimal pairs.
+
+.. csv-table::
+
+   `ceruụ́lu`, **[se.rwṵ̀.lu]**, 'boar', **/kerwúˀlu/**
+   `ce rụ̂lu`, **[se.rṵ̀ú.lu]**, 'the big bag', **/keruúˀlu/** |break|
+   `ne rérui a`, **[ne.ré.rwi.a]**, 'zie makes some noise', **/nerérwia/**
+   `ne téru ia`, **[ne.té.ru.ja]**, 'zie studies still', **/netéruja/**
+
+In the rare case where unstressed prevocalic **/u/** does not become **/w/**,
+or where unstressed prevocalic **/i/** does not become **/j/**, it is written 
+with a dieresis.
+
+.. csv-table::
+
+   `ẹ́lüa`,  **[ḛ̀.lu.ə]**,  'set free'
    `‘Ánïa`, **[ʔá.ni.ə]**, men's name
-   `pạ́nia`, **[pə̰̀.ɲə]**,   'dry'
 
 Consonants other than **/w** **j/** can be followed by a **/w/** or a **/j/**
 to form a cluster.  The cluster **/kj/** is pronounced **[sj]** in careful speech but
-often becomes **[ʃ]** in fast speech. Similarly, **/nj/** and **/lj/** tend to become
-**[ɲ]** and **[ʎ]**.
+often becomes **[ʃ]** in fast speech. Similarly, **/tj/**,  **/nj/**, and
+**/lj/** tend to become **[tʃ]**, **[ɲ]**, and **[ʎ]**. Evidence that these are still
+clusters and not additional consonant phonemes comes from the fact that they can be
+formed across word boundaries.
+
+.. csv-table::
+
+  `to cahụ́ti apō`, **[to.kə.hṵ̀.tʃə.póó]**, 'on the shelf'
+  `ni ọ́mo`,        **[ɲò̰.mo]**,            'I wash you/hir/it'
+  `âpe li otōca`,  **[aá.pe.ʎo.tóó.ka]**,  'I played it'
 
 Vowels, stress, and tone
 ########################
@@ -282,18 +308,73 @@ before two or more enclitics as well.
    `ci câpa ‘u ua`, 'as for our vases', n.b. `câpa` not `*capá`
    `ci tē ‘u ua`, 'as for our eyes', n.b. `tē` not `tê`
 
+A word's prosody had always changed when suffixes were added.
+
+.. csv-table::
+
+   `*méele`,      'cook'
+   `*meeléciˀ`,   'be cooked'
+   `*meelecíˀro`, 'be undercooked'
+
+But because a number of common suffixes were of the form `*-CVˀ`, the specific
+prosodic shift triggered by this suffix was generalized. The result was the secondary
+stem, used before a large class of *secondary suffixes* --- regardless of the original
+shape of those suffixes, and regardless of whether one or more was added.
+
+.. csv-table::
+
+   `mêle`,        'cook'
+   `melẹ́ci`,      'be cooked'
+   `melẹ́ciro`,    'be undercooked'
+
+And where previously adding enclitics to a form like `*meeléciˀ` would have moved the
+stress further, in the modern language words formed using secondary suffixes were
+prosodically invariable.
+
+.. csv-table::
+
+   `*meeléciˀ`,          'be cooked'
+   `*to a meelecíˀ ʔuo`, 'for it to be cooked'
+   `*co a meeleciˀ ʔúo wa`, 'as for it being cooked' |break|
+   `melẹ́ci`,             'be cooked'
+   `to a melẹ́ci ‘uo`,    'for it to be cooked'
+   `co a melẹ́ci ‘uo ua`, 'as for it being cooked'
+
 Word classes
 ############
+
+The result of all this regularization was the modern word class system. The
+first six classes of regular words come from six different sets of historical
+stem shapes.  In each class, the independent form is the natural outcome of the
+historical antepenultimate stress rule; the dependent form is the outcome of
+stress shift before a one-mora enclitic (now generalized and used before any
+number of enclitics of any shape); and the secondary form is the outcome of
+glottalization and stress shift before a `*-CVˀ` suffix (now generalized and
+used before any number of suffixes of any shape).
 
 
 
 .. lemma:: ciọ́ho 
    
-   'dance'
+   '*dance*'
 
 .. lemma:: ciohọ̄
    :headword: ciọ́ho
    :rel: dependent stem
 
+.. lemma:: co
 
+   '*the* (inanimate)'
+
+.. lemma:: có
+   :headword: co
+   :rel: with pushed stress
+
+.. lemma:: cō
+   :headword: co
+   :rel: with pushed stress
+
+.. lemma:: cọ́
+   :headword: co
+   :rel: with pushed stress
 .. wordlist::

@@ -9,19 +9,14 @@ class Level:
   constructor directly.
 
   Attributes:
-      name (str): 
-        A valid Python identifier naming the level. Level names must be unique
+      name: A valid Python identifier naming the level. Level names must be unique
         per language.
-      sigil (str): 
-        A sigil that surrounds markup text meant to be interpreted as a form at
+      sigil: A sigil that surrounds markup text meant to be interpreted as a form at
         this level.
-      children (:obj:`list` of :obj:`Level`): 
-        A list of levels that are defined in terms of this one.
-      parent (:obj:`Level` or None): 
-        The parent level that this one is defined in terms of; `None` if this is the
+      children: A list of levels that are defined in terms of this one.
+      parent : The parent level that this one is defined in terms of; `None` if this is the
         root level of its language.
-      pathto (:obj:`dict` of :obj:`list` of :obj:`transducer`):
-        If thislevel and otherlevel are levels in the same language, 
+      pathto : If thislevel and otherlevel are levels in the same language, 
         thislevel.pathto["otherlevel]" is a path from thislevel to otherlevel running
         through the root node of the language.
   """

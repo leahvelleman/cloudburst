@@ -8,6 +8,10 @@ table.docutils col {
   width: auto;
 }
 
+code {
+  font-size: 0.9em;
+}
+
 table.docutils {
   border: none;
   margin-left: 1em;

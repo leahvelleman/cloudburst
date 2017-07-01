@@ -6,6 +6,6 @@ here partly to share it with others, and partly to dogfood my own tools
 by using them for a serious project.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
 
    phonology

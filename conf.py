@@ -33,7 +33,9 @@
 import sys, os
 sys.path.append(os.path.abspath('extensions'))
 extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.doctest', 'word']
+    'sphinx.ext.doctest',
+    'sphinx.ext.napoleon',
+    'word']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

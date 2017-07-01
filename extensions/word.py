@@ -16,7 +16,11 @@
 
    Figure out how to link indexible words to the section where they're defined.
 
-
+  BASIC INNARDS
+   
+   Get a consistent approach to building content. 
+   Set up the wordlist-generating functions properly, with a class and properties
+     instead of just passing a bunch of references around.
 
   HARDER STUFF
    Start using pynini for lemmatization, even if all we do is transduce every
@@ -66,10 +70,10 @@ def depart_word_node(self, node):
   self.depart_emphasis(node)
 
 def word_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
-  if text[0] == '*':
-    return nodes.strong(_(text), _(text)), [] #WHY IS THIS NOT WORKING?
   env = inliner.document.settings.env
   app = env.app
+  if text[0] == '*':
+    return nodes.strong(_(text), _(text)), [] #WHY IS THIS NOT WORKING?
   if not hasattr(env, 'cloudburst_words'):
     env.cloudburst_words = defaultdict(list)
   out = []
@@ -101,47 +105,51 @@ class WordlistDirective(Directive):
 
 class LemmaDirective(Directive):
   has_content = True
+
   option_spec = {
     'headword': lambda x: x,
     'rel': lambda x: x
   }
+
   def run(self):
-    print self.content
     env = self.state.document.settings.env
-    if not hasattr(env, 'cloudburst_all_lemmas'):
-      env.cloudburst_all_lemmas = {}
+
+    if not hasattr(env, 'cloudburst_lemmas'):
+      env.cloudburst_lemmas = {}
+
     lemma = self.content[0]
-    env.cloudburst_all_lemmas[lemma] = { k: v for (k, v) in self.options.iteritems() }
-    env.cloudburst_all_lemmas[lemma]['docname'] = env.docname,
-    env.cloudburst_all_lemmas[lemma]['definition'] = ' '.join(self.content[2:])
+    env.cloudburst_lemmas[lemma] = { k: v for (k, v) in self.options.items() }
+    env.cloudburst_lemmas[lemma]['docname'] = env.docname,
+    env.cloudburst_lemmas[lemma]['definition'] = ' '.join(self.content[2:])
     return []
 
 def purge_words(app, env, docname):
   if not hasattr(env, 'cloudburst_words'):
     return
-  for (lemma, wordtokens) in env.cloudburst_words.iteritems():
+  for (lemma, wordtokens) in env.cloudburst_words.items():
     if env.cloudburst_words[lemma] == []:
       del env.cloudburst_words[lemma]
     else:
       env.cloudburst_words[lemma] = [word 
           for word in env.cloudburst_words[lemma] 
           if word['docname'] != docname]
-  env.cloudburst_all_lemmas = {lemma: features 
-      for (lemma, features) in env.cloudburst_all_lemmas.iteritems() 
+  env.cloudburst_lemmas = {lemma: features 
+      for (lemma, features) in env.cloudburst_lemmas.items() 
       if features['docname'] != docname}
   
 def process_word_nodes(app, doctree, fromdocname):
-  resolve_headwords(app)
-  print app.builder.env.cloudburst_all_lemmas
+  resolve_lexical_entries(app)
+  for node in doctree.traverse(word):
+    print(node)
   for node in doctree.traverse(wordlist):
     process_wordlist(app, doctree, fromdocname, node)
 
-def resolve_headwords(app):
+def resolve_lexical_entries(app):
   env = app.builder.env
-  for (lemma, entry) in env.cloudburst_all_lemmas.iteritems():
-    if entry.has_key('headword') and entry.has_key('rel'):
+  for (lemma, entry) in env.cloudburst_lemmas.items():
+    if 'headword' in entry and 'rel' in entry:
       headwordlemma = entry['headword']
-      headwordentry = env.cloudburst_all_lemmas[headwordlemma]
+      headwordentry = env.cloudburst_lemmas[headwordlemma]
       rel = entry['rel']
       if not hasattr(headwordentry, 'subentries'):
         headwordentry['subentries'] = []
@@ -154,8 +162,8 @@ def process_wordlist(app, doctree, fromdocname, node):
   head.append(nodes.Text("Lexicon", "Lexicon"))
   content.append(head)
   # In case there are no lemmas specified in our environment TODO: maybe this should go in an init funciton instead?
-  if not hasattr(env, 'cloudburst_all_lemmas'):
-    env.cloudburst_all_lemmas = {}
+  if not hasattr(env, 'cloudburst_lemmas'):
+    env.cloudburst_lemmas = {}
   # TODO: This seems wrong: doesn't generate an anchor properly, for instance.
   for lemma in sorted(env.cloudburst_words.keys(), key=lambda l: unidecode(l)+l):
     content.append(make_wordlist_entry(app, doctree, fromdocname, lemma))
@@ -167,15 +175,15 @@ def make_wordlist_entry(app, doctree, fromdocname, lemma, subentry = False):
   para = nodes.paragraph()
   para += nodes.Text(lemma, lemma)
   para += nodes.target('', '', ids=[('lexicon-%s' % punycode.punycode_encode(lemma))])
-  if env.cloudburst_all_lemmas.has_key(lemma):
-    entry = env.cloudburst_all_lemmas[lemma]
-    if entry.has_key('headword') and not subentry:
+  if lemma in env.cloudburst_lemmas:
+    entry = env.cloudburst_lemmas[lemma]
+    if 'headword' in entry and not subentry:
       return nodes.paragraph()
-    if entry.has_key('definition'):
+    if 'definition' in entry:
       para += nodes.Text(_(' ' + entry['definition'] + ' '), _(' ' + entry['definition'] + ' '))
     for node in make_wordlist_references(app, doctree, fromdocname, lemma, wordtokens):
       para += node
-    if entry.has_key('subentries'):
+    if 'subentries' in entry:
       for (rel, subentrylemma) in entry['subentries']:
         para += nodes.Text(_(rel + ': '))
         para += make_wordlist_entry(app, doctree, fromdocname, subentrylemma, subentry = True)

@@ -96,7 +96,7 @@ class Language(object):
                   sigil: str,
                   parent: Level,
                   derivation: str) -> None:
-        """ Add a level of representation to the language.  """
+        """ Add a level of representation to the language. """
         if sigil in self.__sigils:
             raise Error("Sigil %s already in use in this language." % sigil)
         self.__sigils.append(sigil)

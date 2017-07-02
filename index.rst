@@ -8,12 +8,13 @@ About
   
 This page hosts a few works in progress.
 
-`Cloudburst`_ is (going to be) a literate programming toolkit for conlangers.
+`Cloudburst`_ [#f1]_ is (going to be) a literate programming toolkit for conlangers.
 The idea: :emphasis:`conlangs are programs` --- manmade rules that define a
 language. So tools for documenting software are also good tools for conlanging. 
-I'm trying to test this theory using open-source tools: Python and OpenFst for
+I'm trying to test this theory using open-source tools: Python and `HFST <https://github.com/hfst/hfst>`_ for
 specifying grammar and sound patterns, and Sphinx and reStructuredText for
 formatting.
+
 
 .. _Cloudburst: ./cloudburst.html
 
@@ -22,6 +23,9 @@ and restrained. I'm writing it up here to eat my own dogfood and demonstrate
 what Cloudburst can currently do.
 
 .. _Nēa: ./nea.html
+
+.. [#f1] **CLOUDBURST** is the only legal Scrabble word beginning in **CL** and ending in
+   **RST**. It stands for "conlang (mutter mutter mutter) reStructuredText". 
 
 .. toctree::
    :hidden:

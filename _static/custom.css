@@ -1,5 +1,96 @@
-.pre { 
-  font-family: "Cambria";
-  font-style: "italic";
-  background-color: #FFF;
+html{
+    overflow-y: scroll;
+}
+body{
+  font-family: "brill";
+  font-size: 14pt;
+}
+
+.body div p {
+    text-align: left;
+}
+
+li.toctree-11, li.toctree-12, li.toctree-13, li.toctree-14{
+    margin-left: 0px;
+    padding-left: 0px;
+    font-size: 1em;
+}
+a.current {
+    background: #fff;
+    width: 100%;
+    border-radius: 1em 0 0 1em;
+    margin-left: -10px;
+    padding-left: 10px;
+    margin-right: -10px;
+    padding-right: 10px;
+    display: inline-block;
+}
+
+
+ul li {
+    list-style-type: none;
+    padding-left: 10px;
+    margin-left: 0px;
+}
+
+div.sphinxsidebar ul ul {
+    margin-left: 0.6em;
+}
+
+
+table.docutils col {
+  width: auto;
+}
+
+code {
+  font-size: 0.9em;
+}
+
+table.docutils {
+  border: none;
+  margin-left: 1em;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+table.docutils td,th {
+  border: none;
+} 
+
+table.footnote {
+    background: #fff;
+}
+
+strong { 
+  font-size: 0.9em;
+  font-family: 'calibri', 'noto sans';
+  font-weight: normal;
+}
+
+.sphinxsidebarwrapper {
+    background: #eaeaea;
+    border-radius: 1em;
+}
+
+div.sphinxsidebar a {
+    border: none;
+}
+
+.sphinxsidebarwrapper h3, .caption-text {
+  display: none;
+}
+
+a.reference :hover {
+  color: #444;
+  background: #EAEAEA;
+}
+
+a.current :hover {
+    font-weight: bold;
+    border: 100px;
+}
+
+h1.logo, p.blurb {
+    text-align: center !important;
 }

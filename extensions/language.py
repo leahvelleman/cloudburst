@@ -103,8 +103,8 @@ class Language(object):
             raise Error("Sigil %s already in use in this language." % sigil)
         self.__sigils.append(sigil)
         newlevel = Level(sigil=sigil, name=name, derivation=derivation)
-        parent.add_child(newlevel)
         self.__dict__[name] = newlevel
+        parent.add_child(newlevel)
         self.__makepathsfor(newlevel)
         self.__levels.append(newlevel)
 
@@ -129,6 +129,7 @@ class Language(object):
 
     def __pathdownto(self, level: Level) -> None:
         return list(reversed(self.__pathupfrom(level)))
+
 
 
 class Error(Exception):

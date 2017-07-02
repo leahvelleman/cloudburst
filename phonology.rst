@@ -18,91 +18,103 @@ Sound patterns
 Alphabet
 ########
 
-The Nēa alphabet has fourteen letters: *‘ a c e h i l m n o p r t u.* The
-first letter is a turned apostrophe, and it is indeed a letter (representing a glottal
-stop) and not a punctuation mark. Spelling is mostly phonetic, and this small
-alphabet corresponds to a small inventory of vowel and consonant sounds --- 
-similar to that of Terrestrial languages like Hawai‘ian, though with the addition of
-tone. 
+The Nēa roman alphabet, introduced by foreign linguists and called the
+*‘acéhili* by some, has fourteen letters: *‘ a c e h i l m n o p r t u.* The
+first letter is a turned apostrophe, and it is indeed a letter (representing a
+glottal stop) and not a punctuation mark.  Spelling is mostly phonetic, and
+this small alphabet corresponds to a small inventory of vowel and consonant
+sounds --- similar to that of Terrestrial languages like Hawai‘ian, though with
+the addition of tone. 
 
-There are six Nēa tones. Three are represented by vowels with an acute, macron, or
-circumflex accent: *á ā â*. The other three, called *broken* tones, are represented by
-these same accents combined with an underdot: *ạ́ ạ̄ ậ*.
+There are six Nēa tones. Three are represented by vowels with an acute, macron,
+or circumflex accent: *á ā â*. The other three, called *broken* tones, are
+represented by these same accents combined with an underdot: *ạ́ ạ̄ ậ*. In a very
+few contexts, the vowels *a u* can be seen with an underdot alone: *ạ ụ*. When
+written thus, they have the effect of *breaking* the tone of a following vowel.
 
 The letters *i* and *u* can also be marked with a dieresis: *ï ü*. This
 indicates that, although unstressed, the vowel is pronounced as a separate
-syllable and not as a glide or part of a diphthong.
+syllable and not as a glide or part of a diphthong. The dieresis and the
+underdot do not occur on the same vowel.
 
+The indigenous Nēa writing system is syllabic rather than alphabetic. Its
+original name is simply *menậni* 'writing', but to contrast it with the roman
+*‘acéhili* it can also be called the *‘apétici*, after its first four syllables
+**PI TI CI**.
 
 Consonants
 ##########
 
-Nēa has elevent consonant phonemes:
+Nēa has nine consonant phonemes:
 
 .. csv-table::
    :align: center
 
    **p**, **t**, **k**, **ʔ**
    **m**, **n**,  , 
-   **w**, **l r**, **j** , **h**
+        , **r**,, **h**
+        , **l**,,
 
 The phoneme **/k/** is spelled *c*. For English-speakers, this is a reminder
 of a pattern of allophony: before the front vowels **/e/** and **/i/**,
 this phoneme is pronounced **[s]**. 
 
-The glides **/w j/** are written *u i*. These letters do double-duty, representing
-glides when they are unaccented and come before another vowel letter, and
-independent vowels when they have an accent mark or when they come before a
-consonant letter or at the end of a phrase.
+The glides **[w j]**, though not phonemic, are frequent in Nēa. They are allophones
+of **/u i/** before another vowel --- either in the same word or between words in
+a phrase --- and are written *u i*. 
 
 .. csv-table::
 
    `rérui`, **[ré.rwi]**, 'make noise'
    `óio`,   **[ó.jo]**,   ‘oil’
+   `ni lāpi ạ énu ta`, **[ni.láá.pjà̰é.nu.tə]**, 'I want you to realize'
 
-In fact, almost all instances of **/w j/** could just as easily be reanalyzed as 
-allophones of **/u i/**, since there is a regular alternation that turns unstressed
-**/u i/** into **/w j/** when they occur in prevocalic position. All that prevents
-this reanalysis --- which would bring the size of Nēa's consonant inventory
-down to nine --- is the existence of contrasts between **/wu/** and **/uu/**,
-**/wi/** and **/uj/**, and so on, including some minimal or near-minimal pairs.
-
-.. csv-table::
-
-   `ceruụ́lu`, **[se.rwṵ̀.lu]**, 'boar', **/kerwúˀlu/**
-   `ce rụ̂lu`, **[se.rṵ̀ú.lu]**, 'the big bag', **/keruúˀlu/** |break|
-   `ne rérui a`, **[ne.ré.rwi.a]**, 'zie makes some noise', **/nerérwia/**
-   `ne téru ia`, **[ne.té.ru.ja]**, 'zie studies still', **/netéruja/**
-
-In the rare case where unstressed prevocalic **/u/** does not become **/w/**,
-or where unstressed prevocalic **/i/** does not become **/j/**, it is written 
-with a dieresis.
-
-.. csv-table::
-
-   `ẹ́lüa`,  **[ḛ̀.lu.ə]**,  'set free'
-   `‘Ánïa`, **[ʔá.ni.ə]**, men's name
-
-Consonants other than **/w** **j/** can be followed by a **/w/** or a **/j/**
-to form a cluster.  The cluster **/kj/** is pronounced **[sj]** in careful speech but
-often becomes **[ʃ]** in fast speech. Similarly, **/tj/**,  **/nj/**, and
-**/lj/** tend to become **[tʃ]**, **[ɲ]**, and **[ʎ]**. Evidence that these are still
-clusters and not additional consonant phonemes comes from the fact that they can be
-formed across word boundaries.
+In environments where **/i/** would become **[j]**, sequences of an alveolar
+consonant followed by **/i/** become palatal or palatalized consonants:
+**/tiV/ → [tʃV], /niV/ → [ɲV], /liV/ → [ʎV],** and **/riV/ → [ʝV]**.
+And in the same environments, **/ki/** --- normally pronounced **[si]** ---
+palatalizes as well: **/kiV/ → [ʃV]**. These changes lead to alternations
+at word boundaries depending on whether the following word begins with
+a vowel or a consonant:
 
 .. csv-table::
 
   `to cahụ́ti apō`, **[to.kə.hṵ̀.tʃə.póó]**, 'on the shelf'
+  `to cahụ́ti ‘ilō`, **[to.kə.hṵ̀.ti.ʔi.lóó]**, 'under the shelf' |break|
   `ni ọ́mo`,        **[ɲò̰.mo]**,            'I wash you/hir/it'
+  `ni ‘ọ́lo`,       **[ni.ʔò̰.lo]**,         'I say it'           |break|
   `âpe li otōca`,  **[aá.pe.ʎo.tóó.ka]**,  'I played it'
+  `âpe li rị̂ca`,   **[aá.pe.li.rḭ̀í.kə]**,  'I found you/hir/it'
+
+The full set of consonant *sounds* in Nēa is thus considerably larger than
+the set of *phonemes*:
+
+.. csv-table::
+
+   **p**, **t**, **tʃ**, **k**, **ʔ**
+    , **s**, **ʃ**,   , **h**
+   **m**, **n**, **ɲ**,   ,
+    , **l**, **ʎ**,   ,
+    , **r**, **ʝ**,   ,
 
 Vowels, stress, and tone
 ########################
 
 Nēa has five phonemic vowel qualities, **/a e i o u/**, which can combine to form
 six diphthongs, **/ai ae au ao oe eo/**. In stressed syllables, vowels can be long
-as well as short. When unstressed, **/a/** is pronounced **[ɐ]**. The diphthongs **/ai au/**
-are pronounced **[ɐɪ ɐʊ]** even when stressed.
+as well as short. When unstressed, **/a/** is pronounced **[ə]**. The diphthongs **/ai au/**
+are pronounced **[əɪ əʊ]** even when stressed.
+
+In the rare case where unstressed prevocalic **/u/** does not become **/w/**,
+or where unstressed prevocalic **/i/** does not become **/j/**, it is written 
+with a dieresis. These are analyzed phonemically as sequences of two **/u/**'s or
+two **/i/**'s in a row.
+
+.. csv-table::
+
+   `ẹ́lüa`,  **[ḛ̀.lu.ə]**,  'set free'
+   `‘Ánïa`, **[ʔá.ni.ə]**, men's name
+
 
 Stressed syllables have tone. There are six possibilities. The first two (*sharp*)
 tones are found on short vowels, the second four (*level* and *rising*) tones
@@ -378,3 +390,5 @@ used before any number of suffixes of any shape).
    :headword: co
    :rel: with pushed stress
 .. wordlist::
+
+.. lbv fecit 2017 deo opt. max.

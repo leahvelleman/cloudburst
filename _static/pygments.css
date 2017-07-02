@@ -3,6 +3,20 @@ body{
   font-size: 14pt;
 }
 
+li.toctree-11, li.toctree-12, li.toctree-13, li.toctree-14{
+    margin-left: 0px;
+    padding-left: 0px;
+    font-size: 1em;
+}
+a.current {
+    font-weight: bold;
+}
+
+ul li {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-left: 0px;
+}
 
 table.docutils col {
   width: auto;

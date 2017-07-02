@@ -98,6 +98,8 @@ html_theme_options = {
   'description_font_style': 'head',
   'github_button': 'false',
   'head_font_family': 'linux biolinum o',
+  'show_related': 'true',
+    'fixed_sidebar': 'true',
 }
 
 html_sidebars = {

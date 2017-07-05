@@ -31,7 +31,7 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 import sys, os
-sys.path.append(os.path.abspath('extensions'))
+sys.path.append(os.path.abspath('../extensions'))
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.napoleon',
@@ -100,6 +100,7 @@ html_theme_options = {
   'head_font_family': 'linux biolinum o',
   'show_related': 'true',
     'fixed_sidebar': 'true',
+    'extra_nav_links': {'Home': '../../leahvelleman/html/index.html'}
 }
 
 html_sidebars = {
@@ -172,4 +173,4 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
-html_static_path = ['_static']
+html_static_path = ['../_static']

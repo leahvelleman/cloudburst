@@ -6,21 +6,22 @@
 About
 =====
   
-This page hosts a few works in progress.
+This page hosts a few works in progress:
 
-`Cloudburst`_ [#f1]_ is (going to be) a literate programming toolkit for conlangers.
-The idea: :emphasis:`conlangs are programs` --- manmade rules that define a
-language. So tools for documenting software are also good tools for conlanging. 
-I'm trying to test this theory using open-source tools: Python and `HFST <https://github.com/hfst/hfst>`_ for
-specifying grammar and sound patterns, and Sphinx and reStructuredText for
-formatting.
+`Cloudburst`_ [#f1]_ is a literate programming toolkit for conlangers.
 
+            The idea: :emphasis:`conlangs are programs` --- manmade rules that
+            define a language. So tools for documenting software are also good
+            tools for conlanging.  I'm trying to test this theory using
+            open-source tools: Python and `HFST
+            <https://github.com/hfst/hfst>`_ for specifying grammar and sound
+            patterns, and Sphinx and reStructuredText for formatting.
 
 .. _Cloudburst: ./cloudburst.html
 
-`Nēa`_ is (going to be) a personal conlang. It aims to be “realistic,” detailed,
-and restrained. I'm writing it up here to eat my own dogfood and demonstrate
-what Cloudburst can currently do.
+`Nēa`_ is a personal conlang. It aims to be “realistic,” detailed, and
+restrained. I'm writing it up here to eat my own dogfood and demonstrate what
+Cloudburst can do.
 
 .. _Nēa: ./nea.html
 
@@ -34,3 +35,4 @@ what Cloudburst can currently do.
    self
    cloudburst
    examples
+   index-personal

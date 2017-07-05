@@ -6,7 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = Cloudburst
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = ../_build/cloudburst
 
 # Put it first so that "make" without argument is like "make help".
 help:

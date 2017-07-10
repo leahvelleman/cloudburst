@@ -1,9 +1,18 @@
-""" Language, Level, and Form objects
-"""
 import pynini
 from pynini import union as u
 from pynini import transducer as t
 from pynini import acceptor as a
+"""
+TODO:
+    Make Levels callable.
+    Factor out Language class by giving each Level responsibility for its own
+        sigma_star.
+    Convenience functions for realization transducers and soundchange
+        transducers.
+"""
+
+""" Language, Level, and Form objects
+"""
 
 class Level(object):
     """A level of representation for language forms.
@@ -13,8 +22,6 @@ class Level(object):
     :function:`Level()` constructor directly.
 
     Attributes:
-        name: A valid Python identifier naming the level. Level names must be
-            unique per language.
         derivation: If this is the root level of its language, a pynini
             acceptor constituting the root lexicon. If this is a child level, a
             pynini transducer deriving representations at this level from
@@ -28,26 +35,17 @@ class Level(object):
         language: Language this level belongs to.
     """
 
-    # pylint: disable=too-many-instance-attributes
-
     def __init__(self,
                  derivation: pynini.Fst,
                  parent: 'Level' = None) -> None:
         self.children = []
         self.derivation = derivation
-        # TODO: convince self that this derivation isn't getting mutated ever
-        # -- it might be useful someday to have the unmutated, uncomposed
-        # original on hand.
         if parent:
             self.language = parent.language
-            # TODO add test: error or at least warn if the derivation for a
-            # child node isn't a transducer
             self.parent = parent
         else:
             self.language = self
             self.parent = None
-            # TODO add test: error if the "derivation" for a root node isn't an
-            # acceptor.
         self.converters = {self: derivation.copy().project(project_output=True)}
 
     def add_child(self,
@@ -98,15 +96,9 @@ class Level(object):
 class Language(Level):
     """ A language.
 
-    In Cloudburst a language is made up of one or more levels of representation,
-    each with a unique name and sigil and with a set of transducers linking it
-    to other levels in the same language. Every language has a `root` level of
-    representation. Forms that are identical at the root level are treated as
+    In Cloudburst a language is made up of one or more levels of
+    representation.  Forms that are identical at the root level are treated as
     identical for other purposes.
-
-    If `lang` is a language and `lev` is the name of a level belonging to it
-    then `lang.<lev>` is a reference to the named level. `lang.root` is always
-    a reference to the root level of `lang`.
     """
 
     def __init__(self,

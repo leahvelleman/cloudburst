@@ -31,10 +31,8 @@ class Level(object):
     # pylint: disable=too-many-instance-attributes
 
     def __init__(self,
-                 name: str,
                  derivation: pynini.Fst,
                  parent: 'Level' = None) -> None:
-        self.name = name
         self.children = []
         self.derivation = derivation
         # TODO: convince self that this derivation isn't getting mutated ever
@@ -44,11 +42,7 @@ class Level(object):
             self.language = parent.language
             # TODO add test: error or at least warn if the derivation for a
             # child node isn't a transducer
-            if self.language.has_name(name):
-                raise Error("Level name %s in use or reserved in language %s." %
-                            (name, self.language))
             self.parent = parent
-            self.language.register_level(self)
         else:
             self.language = self
             self.parent = None
@@ -56,18 +50,15 @@ class Level(object):
             # acceptor.
         self.converters = {self: derivation.copy().project(project_output=True)}
 
-    def __repr__(self):
-        return self.name
-
     def add_child(self,
-                  name: str,
                   derivation: pynini.Fst) -> None:
         """Add the specified node as a child of mine, and set up converters
         between it and all the nodes I can convert to or from."""
-        child = Level(name=name, parent=self,
+        child = Level(parent=self,
                       derivation=derivation)
         self.children.append(child)
         self.__connect_child(child)
+        return child
 
     def __connect_child(self, child: 'Level') -> None:
         """For every node I can convert to or from, set up converters for the
@@ -127,22 +118,11 @@ class Language(Level):
             alphabet = pynini.acceptor(alphabet)
         self.sigma_star = pynini.union(root_lexicon,
                                        alphabet).closure()
-        super().__init__(name="root", derivation=root_lexicon, parent=None)
+        super().__init__(derivation=root_lexicon, parent=None)
 
 
-    def __repr__(self):
-        return self.name
-
-    def register_level(self, level: Level) -> None:
-        """ Called by a newly created level to inform the language of its
-        name and sigil."""
-        self.__dict__[level.name] = level
 
 
-    def has_name(self, name: str):
-        """ Is `name` already in use in this language, either as a level name
-        or as the name of a built-in property or method? """
-        return name in dir(self)
 
 
 class Error(Exception):
@@ -154,11 +134,7 @@ if __name__ == "__main__":
                                u(*"[+Sg] [+Pl]".split())),
                  alphabet=u(*"""a b c d e f g h i j k l m n o p q r s
                             t u v w x y z""".split()))
-    l.add_child(name="b", derivation=(pynini.cdrewrite(t("cat[+Pl]",
-                                                         "cats"),
-                                                       "","",l.sigma_star) *
-                                      pynini.cdrewrite(t("fox[+Pl]", "foxes"),
-                                                       "","",l.sigma_star)))
-    l.b.add_child(name="c", derivation=pynini.cdrewrite(t("[+Sg]",
-                                                          ""),"","",l.sigma_star))
-    print((a("fox[+Pl]")* l.converters[l.b]).stringify())
+    b = l.add_child(pynini.cdrewrite(t("cat[+Pl]", "cats"),"","",l.sigma_star) *
+                    pynini.cdrewrite(t("fox[+Pl]", "foxes"),"","",l.sigma_star))
+
+    print((a("fox[+Pl]")* l.converters[b]).stringify())

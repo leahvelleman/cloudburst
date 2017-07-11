@@ -31,7 +31,7 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 import sys, os
-sys.path.append(os.path.abspath('../extensions'))
+sys.path.append(os.path.abspath('../cloudburst/'))
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.napoleon',

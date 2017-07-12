@@ -3,12 +3,6 @@ from pynini import union as u
 from pynini import transducer as t
 from pynini import acceptor as a
 """
-TODO:
-    Make Levels callable.
-    Factor out Language class by giving each Level responsibility for its own
-        sigma_star.
-    Convenience functions for realization transducers and soundchange
-        transducers.
 """
 
 """ Language, Level, and Form objects
@@ -102,14 +96,10 @@ class Language(Level):
     """
 
     def __init__(self,
-                 root_lexicon: pynini.Fst,
-                 alphabet: pynini.Fst) -> None:
+                 root_lexicon: pynini.Fst) -> None:
         if isinstance(root_lexicon, str):
             root_lexicon = pynini.acceptor(root_lexicon)
-        if isinstance(alphabet, str):
-            alphabet = pynini.acceptor(alphabet)
-        self.sigma_star = pynini.union(root_lexicon,
-                                       alphabet).closure()
+        self.sigma_star = root_lexicon.closure()
         super().__init__(derivation=root_lexicon, parent=None)
 
 

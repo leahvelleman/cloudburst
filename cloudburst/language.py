@@ -1,12 +1,19 @@
+""" Language, Level, and Form objects
+"""
 import pynini
 from pynini import union as u
 from pynini import transducer as t
 from pynini import acceptor as a
-"""
-"""
 
-""" Language, Level, and Form objects
-"""
+def apply_down(transducer: pynini.Fst,
+               string: str) -> str:
+    """Mimics xfst/foma-style apply down"""
+    return (a(string)*transducer).project(True).stringify().decode()
+
+def apply_up(transducer: pynini.Fst,
+             string: str) -> str:
+    """Mimics xfst/foma-style apply up"""
+    return (transducer*a(string)).project(False).stringify().decode()
 
 class Level(object):
     """A level of representation for language forms.
@@ -41,6 +48,7 @@ class Level(object):
             self.language = self
             self.parent = None
         self.converters = {self: derivation.copy().project(project_output=True)}
+
 
     def add_child(self,
                   derivation: pynini.Fst) -> None:
@@ -112,10 +120,8 @@ class Error(Exception):
     pass
 
 if __name__ == "__main__":
-    l = Language(root_lexicon=(u(*"cat fox".split())+
-                               u(*"[+Sg] [+Pl]".split())),
-                 alphabet=u(*"""a b c d e f g h i j k l m n o p q r s
-                            t u v w x y z""".split()))
+    l = Language(u(*"cat fox".split())+
+                 u(*"[+Sg] [+Pl]".split()))
     b = l.add_child(pynini.cdrewrite(t("cat[+Pl]", "cats"),"","",l.sigma_star) *
                     pynini.cdrewrite(t("fox[+Pl]", "foxes"),"","",l.sigma_star))
 

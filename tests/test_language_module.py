@@ -3,7 +3,15 @@ import unittest
 from pynini import transducer as t
 from pynini import acceptor as a
 from pynini import union as u
-from cloudburst import Language 
+from cloudburst import * 
+
+class UtilityTestCase(unittest.TestCase):
+    def test_apply(self):
+        self.assertEqual(apply_down(t("Foo", "Bar"), "Foo"), "Bar", 
+                         "apply_down gives unexpected result")
+        self.assertEqual(apply_up(t("Foo", "Bar"), "Bar"), "Foo",
+                         "apply_up gives unexpected result")
+
 class LanguageTestCase(unittest.TestCase):
     def setUp(self):
         self.language = Language(u(a("foo"), a("bar"), a("baz")))

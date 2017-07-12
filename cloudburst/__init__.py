@@ -1,1 +1,1 @@
-from .language import Language
+from .language import Language, apply_up, apply_down

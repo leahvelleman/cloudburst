@@ -2,7 +2,7 @@
 
 Linguistic writing often includes examples like this
 
-   (1) θέλει να
+       θέλει να
        θέλ-ει   να
        want-3sg that
        'wants to'

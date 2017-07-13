@@ -1,6 +1,6 @@
 # cloudburst
 
-Linguistic writing often includes examples like this
+In linguistic writing you see a lot of examples like this
 
        θέλει να
        θέλ-ει   να
@@ -10,7 +10,13 @@ Linguistic writing often includes examples like this
 or sentences like this:
 
     All the basic forms can be combined with the future 
-    particle θα [θa] (historically a contraction of θέλει 
-    να [θelina], 'wants to'). 
+    particle θα /θa/ (historically a contraction of θέλει 
+    να /'θelina/, 'wants to'). 
     
-These show a single linguistic *form* (in this case a short phrase) represented at several different *levels* --- written normally, broken into morphemes, translated morpheme-by-morpheme into English, converted into an IPA pronunciation key, and so on.
+These show a single linguistic *form* (in this case a short phrase in Modern Greek) 
+represented at several different *levels* --- written normally as `θέλει να`, 
+broken into morphemes as `θέλ-ει να`, translated morpheme-by-morpheme as `want-3sg that`, 
+converted into an IPA pronunciation key as `/'θelina/`, 
+and so on.
+
+

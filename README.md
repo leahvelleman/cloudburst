@@ -9,10 +9,8 @@ tools for structured documentation, letting you do things like:
   etc) for written linguistic examples.
 * Check that human-written annotations match the predictions of 
   a finite-state model.
-* Link words or morphemes in examples to appropriate resources,
-  like lexical entries or concordances.
-* Index words or morphemes, so that a lexical entry can link to
-  all examples using the word in question.
+* Link words or morphemes in examples to entries in a lexicon.
+* Build an index of words, lemmas, or morphemes.
 
 It's based on a few open-source tools: Sphinx and Python doctools
 for processing markup and autogenerating HTML documentation or 

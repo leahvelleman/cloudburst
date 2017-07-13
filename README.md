@@ -23,7 +23,7 @@ These are big goals. Right now this project is a small experiment.
 I am learning as I go, using a personal conlang as a test project,
 and blogging about it [here](www.velleman.org/cloudburst). 
 
-# Background
+## Background
 
 In linguistic writing you see a lot of examples like this
 

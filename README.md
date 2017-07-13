@@ -13,8 +13,8 @@ tools for structured documentation, letting you do things like:
 * Build an index of words, lemmas, or morphemes.
 
 It's based on a few open-source tools: Sphinx and Python doctools
-for processing markup and autogenerating HTML documentation or 
-LaTeX source code, and Pynini and OpenFST for writing linguistic 
+for turning markup into HTML or LaTeX, and Pynini and OpenFST 
+for writing linguistic 
 resources. Long-term goals include integration with more linguistic 
 resource backends (foma, HFST, SFST, xfst... William Whittaker's 
 Words? Shoebox, Toolbox, or FLEx? Hunspell??)

@@ -17,7 +17,7 @@ for processing markup and autogenerating HTML documentation or
 LaTeX source code, and Pynini and OpenFST for writing linguistic 
 resources. Long-term goals include integration with more linguistic 
 resource backends (foma, HFST, SFST, xfst... William Whittaker's 
-Words?)
+Words? Shoebox/Toolbox/FLEx? Hunspell??)
 
 These are big goals. Right now this project is a small experiment.
 I am learning as I go, using a personal conlang as a test project,

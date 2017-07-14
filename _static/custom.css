@@ -1,0 +1,135 @@
+@media screen and (min-width: 875px) {
+.body img {
+    border-radius: 1em;
+    margin-right: 30px;
+}
+html{
+    overflow-y: scroll;
+}
+div.bodywrapper {
+    margin: 0 0 0 260px;
+}
+li.toctree-11, li.toctree-12, li.toctree-13, li.toctree-14{
+    margin-left: 0px;
+    padding-left: 0px;
+    font-size: 1em;
+}
+
+li {
+    width: 100%;
+}
+
+.sphinxsidebarwrapper {
+    background: #bca;
+    border-radius: 1em;
+}
+
+a.reference :hover {
+  color: #444;
+  background: #abc;
+}
+
+span.current, a.current.reference.internal {
+    background: #fff;
+    width: 100%;
+    margin-left: -10px;
+    padding-left: 10px;
+    border-radius: 1em 0 0 1em;
+    display: inline-block;
+}
+
+a.current.reference.internal:hover {
+    border: none;
+}
+
+}
+
+div.sphinxsidebar a.tag {
+    color: #786;
+}
+
+body{
+  font-family: "brill";
+}
+
+div.footer {
+    text-align: left;
+}
+div.sphinxsidebar h3, .caption-text {
+    display: none;
+}
+
+
+div.sphinxsidebar a {
+    border: 0;
+    text-decoration: 0;
+}
+
+div.sphinxsidebar ul li {
+    clear: right;
+    list-style-type: none;
+    padding-left: 10px;
+    margin-left: 0px;
+}
+
+
+div.sphinxsidebar ul ul {
+    margin-left: 0.6em;
+}
+
+
+table.docutils col {
+  width: auto;
+}
+
+code {
+  font-size: 0.9em;
+}
+
+table.docutils {
+  border: none;
+  margin-left: 1em;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+table.docutils td,th {
+  border: none;
+} 
+
+table.footnote {
+    background: #fff;
+}
+
+strong { 
+  font-size: 0.9em;
+  font-family: 'calibri', 'noto sans';
+  font-weight: normal;
+}
+
+
+
+
+a.current :hover {
+    font-weight: bold;
+    border: 100px;
+}
+
+
+
+
+.admonition strong {
+    font-weight: bold;
+}
+
+div.sphinxsidebarwrapper h1.logo, p.blurb {
+    text-align: center;
+}
+div.sphinxsidebar {
+    width: 260px;
+}
+div.sphinxsidebar span.tagholder {
+    float: right;
+    margin-right: 10px;
+}

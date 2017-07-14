@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>language module &#8212; cloudburst 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Examples" href="../examples/examples.html" />
+    <link rel="prev" title="Cloudburst" href="../cloudburst.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">cloudburst</a></h1>
+
+
+
+<p class="blurb">Conlangs are programs</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloudburst.html">Cloudburst</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="../../leahvelleman/html/index.html">Home</a></li>
+    
+</ul>
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-language">
+<span id="language-module"></span><h1>language module<a class="headerlink" href="#module-language" title="Permalink to this headline">¶</a></h1>
+<p>Language, Level, and Form objects</p>
+<dl class="exception">
+<dt id="language.Error">
+<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">Error</code><a class="headerlink" href="#language.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<p>Generic error for this module.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="language.Form">
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>levels_to_show: typing.List[language.Level], values: typing.Iterable[str]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Form" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A linguistic form.</p>
+<dl class="method">
+<dt id="language.Form.at_level">
+<code class="descname">at_level</code><span class="sig-paren">(</span><em>level: language.Level</em><span class="sig-paren">)</span> &#x2192; typing.Set[typing.List[str]]<a class="headerlink" href="#language.Form.at_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of renderings of this form at a given level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Form.at_levels">
+<code class="descname">at_levels</code><span class="sig-paren">(</span><em>levels: typing.Iterable[language.Level]</em><span class="sig-paren">)</span> &#x2192; typing.Set[typing.Tuple[str]]<a class="headerlink" href="#language.Form.at_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set of <em>lists</em> of renderings of this form at a given <em>list</em> of
+levels.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Form.is_ambiguous">
+<code class="descname">is_ambiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#language.Form.is_ambiguous" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this Form is ambiguous &#8212; i.e., if it is consistent with
+multiple underlying root representations.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="language.InconsistentForm">
+<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">InconsistentForm</code><a class="headerlink" href="#language.InconsistentForm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<p>Attempting to create a form that can&#8217;t meet all the specified criteria.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="language.Language">
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Language</code><span class="sig-paren">(</span><em>key_lexicon: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Language" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">language.Level</span></code></a></p>
+<p>A language.</p>
+<p>In Cloudburst a language is made up of one or more levels of
+representation.  Forms that are identical at the key level are treated as
+identical for other purposes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key_lexicon</strong> &#8211; A Pynini acceptor that will provide a lexicon for the key
+level of the language.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="language.Language.sigma_star">
+<code class="descname">sigma_star</code><a class="headerlink" href="#language.Language.sigma_star" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Pynini acceptor representing the closure over the
+alphabet of the language.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="language.Level">
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Level</code><span class="sig-paren">(</span><em>derivation: pynini.Fst</em>, <em>parent: typing.Union[language.Level</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A level of representation for language forms.</p>
+<dl class="attribute">
+<dt id="language.Level.derivation">
+<code class="descname">derivation</code><a class="headerlink" href="#language.Level.derivation" title="Permalink to this definition">¶</a></dt>
+<dd><p>If this is the key level of its language, a Pynini
+acceptor constituting the key lexicon. If this is a child level, a
+pynini transducer deriving representations at this level from
+representations at the parent level.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="language.Level.parent">
+<code class="descname">parent</code><a class="headerlink" href="#language.Level.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The parent level that this one is defined in terms of; <cite>None</cite>
+if this is the key level of its language.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="language.Level.children">
+<code class="descname">children</code><a class="headerlink" href="#language.Level.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of levels that are defined in terms of this one.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="language.Level.converters">
+<code class="descname">converters</code><a class="headerlink" href="#language.Level.converters" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <cite>thislevel</cite> and <cite>otherlevel</cite> are levels in the same
+language, <code class="docutils literal"><span class="pre">thislevel.converters[otherlevel]</span></code> is a transducer
+converting from representations at <cite>thislevel</cite> to representations
+at <cite>otherlevel</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="language.Level.language">
+<code class="descname">language</code><a class="headerlink" href="#language.Level.language" title="Permalink to this definition">¶</a></dt>
+<dd><p>Language this level belongs to.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.add_child">
+<code class="descname">add_child</code><span class="sig-paren">(</span><em>derivation: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.add_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the specified node as a child of mine, and set up converters
+between it and all the nodes I can convert to or from.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.is_root">
+<code class="descname">is_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#language.Level.is_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if this node is a root node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.possible_roots">
+<code class="descname">possible_roots</code><span class="sig-paren">(</span><em>content: str</em><span class="sig-paren">)</span> &#x2192; typing.List[str]<a class="headerlink" href="#language.Level.possible_roots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the specified form from this level to the root level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.walk">
+<code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breadth-first traversal of this level and its children.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body"><a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-obj docutils literal"><span class="pre">Level</span></code></a> &#8211; The next level in the breadth-first traversal.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.walk_with_depth">
+<code class="descname">walk_with_depth</code><span class="sig-paren">(</span><em>level: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.walk_with_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breadth-first traversal of this level and its children, keeping
+track of the depth within the tree. Used to pretty-print the levels
+that make up a Language.</p>
+<dl class="docutils">
+<dt>Yields: The next level in the breadth-first traversal, and</dt>
+<dd>a number indicating its depth, yielded as a tuple.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="language.SurfaceAmbiguityWarning">
+<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">SurfaceAmbiguityWarning</code><a class="headerlink" href="#language.SurfaceAmbiguityWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Warning</span></code></p>
+<p>A rendering has been requested of a Form that is ambiguous at some of
+the requested Levels.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="language.UnderlyingAmbiguityWarning">
+<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">UnderlyingAmbiguityWarning</code><a class="headerlink" href="#language.UnderlyingAmbiguityWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Warning</span></code></p>
+<p>A rendering has been requested of a Form that is ambiguous at the root
+Level, but not at any of the requested Levels.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="language.apply_down">
+<code class="descclassname">language.</code><code class="descname">apply_down</code><span class="sig-paren">(</span><em>transducer: pynini.Fst</em>, <em>string: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.apply_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimics xfst/foma-style apply down.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>transducer</strong> &#8211; A finite state transducer.</li>
+<li><strong>string</strong> &#8211; A string to apply at the top side of <cite>transducer</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
+<dt>A set of strings that can be read off the bottom side of</dt>
+<dd><p class="first last"><cite>transducer</cite> when applying <cite>string</cite> at the top side.</p>
+</dd>
+</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Set[str]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="language.apply_up">
+<code class="descclassname">language.</code><code class="descname">apply_up</code><span class="sig-paren">(</span><em>transducer: pynini.Fst</em>, <em>string: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.apply_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mimics xfst/foma-style apply up.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Args:</dt>
+<dd>transducer: A finite state transducer.
+string: A string to apply at the bottom side of <cite>transducer</cite>.</dd>
+</dl>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>A set of strings that can be read off the top side of</dt>
+<dd><cite>transducer</cite> when applying <cite>string</cite> at the bottom side.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Set[str]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2017, Leah Velleman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/source/language.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

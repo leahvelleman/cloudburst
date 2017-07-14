@@ -1,3 +1,0 @@
-_build/* linguist-vendored
-*.rst linguist-language=reStructuredText
-*.py linguist-language=Python

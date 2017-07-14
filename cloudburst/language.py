@@ -7,7 +7,15 @@ from pynini import acceptor as a
 
 def apply_down(transducer: pynini.Fst,
                string: str) -> Set[str]:
-    """Mimics xfst/foma-style apply down"""
+    """Mimics xfst/foma-style apply down.
+
+    Args:
+        transducer: A finite state transducer.
+        string: A string to apply at the top side of `transducer`.
+
+    Returns:
+        Set[str]: A set of strings that can be read off the bottom side of
+            `transducer` when applying `string` at the top side."""
     return {t.decode() for t, _, _ in
             pynini.shortestpath((a(string)*transducer).project(True).optimize(),
                                 nshortest=100,
@@ -15,9 +23,17 @@ def apply_down(transducer: pynini.Fst,
 
 def apply_up(transducer: pynini.Fst,
              string: str) -> Set[str]:
-    """Mimics xfst/foma-style apply up"""
+    """Mimics xfst/foma-style apply up.
+
+    Args:
+        transducer: A finite state transducer.
+        string: A string to apply at the bottom side of `transducer`.
+
+   Returns:
+        Set[str]: A set of strings that can be read off the top side of
+            `transducer` when applying `string` at the bottom side."""
     return {t.decode() for t, _, _ in
-            pynini.shortestpath((transducer*a(string)).project(False).optimize(),
+            pynini.shortestpath((transducer*a(string)).project().optimize(),
                                 nshortest=100,
                                 unique=True).paths()}
 
@@ -28,21 +44,18 @@ def apply_up(transducer: pynini.Fst,
 class Level(object):
     """A level of representation for language forms.
 
-    Note: In almost all cases, :obj:`Level` objects should be created by the
-    :function:`Language.add_level` function, and not using the
-    :function:`Level()` constructor directly.
-
     Attributes:
-        derivation: If this is the root level of its language, a pynini
-            acceptor constituting the root lexicon. If this is a child level, a
+        derivation: If this is the key level of its language, a Pynini
+            acceptor constituting the key lexicon. If this is a child level, a
             pynini transducer deriving representations at this level from
             representations at the parent level.
         parent: The parent level that this one is defined in terms of; `None`
-            if this is the root level of its language.
+            if this is the key level of its language.
         children: A list of levels that are defined in terms of this one.
-        converters: If thislevel and otherlevel are levels in the same language,
-            ``thislevel.converters[otherlevel]`` is a path from thislevel to
-            otherlevel running through the root node of the language.
+        converters: If `thislevel` and `otherlevel` are levels in the same
+            language, ``thislevel.converters[otherlevel]`` is a transducer
+            converting from representations at `thislevel` to representations
+            at `otherlevel`.
         language: Language this level belongs to.
     """
 
@@ -105,7 +118,8 @@ class Level(object):
         track of the depth within the tree. Used to pretty-print the levels
         that make up a Language.
 
-        Yields: The next level in the breadth-first traversal and its depth."""
+        Yields: The next level in the breadth-first traversal, and
+            a number indicating its depth, yielded as a tuple."""
         yield (self, level)
         for child in self.children:
             for (childnode, childlevel) in child.walk_with_depth(level+1):
@@ -119,16 +133,25 @@ class Language(Level):
     """ A language.
 
     In Cloudburst a language is made up of one or more levels of
-    representation.  Forms that are identical at the root level are treated as
+    representation.  Forms that are identical at the key level are treated as
     identical for other purposes.
+
+    Args:
+        key_lexicon: A Pynini acceptor that will provide a lexicon for the key
+            level of the language. 
+
+    Attributes:
+        sigma_star: A Pynini acceptor representing the closure over the
+            alphabet of the language. 
     """
 
     def __init__(self,
-                 root_lexicon: pynini.Fst) -> None:
-        if isinstance(root_lexicon, str):
-            root_lexicon = pynini.acceptor(root_lexicon)
-        self.sigma_star = root_lexicon.closure()
-        super().__init__(derivation=root_lexicon, parent=None)
+                 key_lexicon: pynini.Fst) -> None:
+        if isinstance(key_lexicon, str):
+            key_lexicon = pynini.acceptor(key_lexicon)
+        self.sigma_star = key_lexicon.closure()
+        # TODO: Is this right? Create unit tests for it.
+        super().__init__(derivation=key_lexicon, parent=None)
 
 class Form(object):
     """ A linguistic form. """

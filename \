@@ -1,4 +1,4 @@
-#pylint: disable=wildcard-import, missing-docstring, attribute-defined-outside-init, unused-wildcard-import, invalid-name
+#pylint: disable=wildcard-import, missing-docstring, attribute-defined-outside-init, unused-wildcard-import
 import unittest
 from pynini import transducer as t
 from pynini import acceptor as a
@@ -7,14 +7,14 @@ from pynini import string_map as m
 import pynini
 from cloudburst.language import *
 
-chars = [chr(i) for i in range(32, 126) if i not in (91, 92, 93)]
+chars = [chr(i) for i in range(32,126) if i not in (91,92,93)]
 
 class UtilityTestCase(unittest.TestCase):
     def test_apply(self):
+        self.assertEqual(apply_down(t("Foo", "Bar"), "Foo"), "Bar",
+                         "apply_down gives unexpected result")
         self.assertEqual(apply_up(t("Foo", "Bar"), "Bar"), {"Foo"},
                          "apply_up gives unexpected result")
-        self.assertEqual(apply_down(t("Foo", "Bar"), "Foo"), {"Bar"},
-                         "apply_down gives unexpected result")
 
 class LanguageTestCase(unittest.TestCase):
     def setUp(self):
@@ -38,7 +38,7 @@ class LanguageTestCase(unittest.TestCase):
     def test_constraint(self):
         self.level1 = self.language.add_child(a("f") + t("o", "a").closure())
         self.form1 = self.level1("faa")
-        with self.assertRaises(InconsistentForm):
+        with self.assertRaises(Error):
             self.form1 = self.level1("faaa")
 
     def tearDown(self):
@@ -62,7 +62,7 @@ class FormTestCase(unittest.TestCase):
             self.form1 = self.level1("foo")
 
     def test_possible_roots(self):
-        self.assertEqual(self.level1.possible_roots("fafafa"),
+        self.assertEqual(self.level1.possible_roots("fafafa"), 
                          {"fofofo"})
 
     def test_ambiguity(self):
@@ -71,10 +71,9 @@ class FormTestCase(unittest.TestCase):
         self.level4 = self.level3.add_child(
             u(t("a", "a"), t("b", "a")))
         self.assertTrue(self.level4("a").is_ambiguous())
-        print(self.level4("a").values)
-        with self.assertWarns(UnderlyingAmbiguityWarning):
+        with self.assertRaises(UnderlyingAmbiguityWarning):
             print(self.level4("a"))
-        with self.assertWarns(SurfaceAmbiguityWarning):
+        with self.assertRaises(SurfaceAmbiguityWarning):
             print(~self.level4("a") >> self.level3)
 
 if __name__ == '__main__':

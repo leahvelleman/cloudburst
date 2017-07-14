@@ -1,21 +1,23 @@
 """ Language, Level, and Form objects
 """
-from typing import Iterable, List, Set
+from typing import Iterable, List, Set, Tuple
 from warnings import warn
 import pynini
 from pynini import acceptor as a
 
 def apply_down(transducer: pynini.Fst,
-               string: str) -> str:
+               string: str) -> Set[str]:
     """Mimics xfst/foma-style apply down"""
-    return (a(string)*transducer).project(True).stringify().decode()
+    return {t.decode() for t, _, _ in
+            pynini.shortestpath((a(string)*transducer).project(True),
+                                nshortest=100).paths()}
 
 def apply_up(transducer: pynini.Fst,
-             string: str) -> List[str]:
+             string: str) -> Set[str]:
     """Mimics xfst/foma-style apply up"""
-    return [t.decode() for t, _, _ in
+    return {t.decode() for t, _, _ in
             pynini.shortestpath((transducer*a(string)).project(False),
-                                nshortest=5).paths()]
+                                nshortest=100).paths()}
 
 # TODO: determine what a reasonable way to set nshortest is.
 # TODO: it feels like a wart that these are outside the Level class. Possibly
@@ -141,10 +143,18 @@ class Form(object):
         return Form(levels_to_show=(self.levels_to_show + other.levels_to_show),
                     values=(self.values & other.values))
 
+    def __rshift__(self, other: Level) -> 'Form':
+        return Form(levels_to_show=self.levels_to_show + [other],
+                    values=self.values)
+
     def __repr__(self) -> str:
-        renderings = self.at_levels(self.levels_to_show)
-        self._issue_ambiguity_warnings(renderings)
-        return ", ".join([" ".join(rendering) for rendering in renderings])
+        readings = self.at_levels(self.levels_to_show)
+        self._issue_ambiguity_warnings(readings)
+        out = []
+        for reading in readings:
+            for representation in reading:
+                out.append(str(representation))
+        return ", ".join(out)
 
     def __eq__(self, other) -> bool:
         return self.values == other.values
@@ -154,7 +164,8 @@ class Form(object):
         if len(renderings) > 1:
             warn("Rendering a form that is ambiguous at the requested level",
                  SurfaceAmbiguityWarning)
-        elif len(self.values) > 1:
+        if len(self.values) > 1:
+            print("FUCK")
             warn("Rendering a form that is ambiguous at the root level, but"
                  "not at the requested level",
                  UnderlyingAmbiguityWarning)
@@ -168,15 +179,20 @@ class Form(object):
         """ The set of renderings of this form at a given level. """
         return self.at_levels([level])
 
-    def at_levels(self, levels: Iterable[Level]) -> Set[List[str]]:
+    def at_levels(self, levels: Iterable[Level]) -> Set[Tuple[str]]:
         """ The set of *lists* of renderings of this form at a given *list* of
         levels."""
         out = set()
         for value in self.values:
-            item = []
-            for level in levels:
-                converter = level.language.converters[level]
-                item.append(level.fmt(apply_down(converter, value)))
+            item = tuple(
+                level.fmt(apply_down(level.language.converters[level],
+                                     value)).pop()
+                # TODO: THIS IS A FUCKING HACK, and presupposes that apply_down
+                # will only return a one-item set. We are never actually
+                # enforcing the downward-unambiguousness of derivations, so we
+                # probably shouldn't presuppose that.
+                for level in levels
+            )
             out.add(item)
         return out
 
@@ -191,16 +207,16 @@ class Error(Exception):
     """ Generic error for this module. """
     pass
 
-class SurfaceAmbiguityWarning(Error):
+class SurfaceAmbiguityWarning(Warning):
     """ A rendering has been requested of a Form that is ambiguous at some of
     the requested Levels. """
     pass
 
-class UnderlyingAmbiguityWarning(Error):
+class UnderlyingAmbiguityWarning(Warning):
     """ A rendering has been requested of a Form that is ambiguous at the root
     Level, but not at any of the requested Levels. """
     pass
 
-class InconsistentForm(Error):
+class InconsistentForm(Exception):
     """ Attempting to create a form that can't meet all the specified criteria.
     """

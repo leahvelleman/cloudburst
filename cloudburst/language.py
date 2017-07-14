@@ -9,15 +9,17 @@ def apply_down(transducer: pynini.Fst,
                string: str) -> Set[str]:
     """Mimics xfst/foma-style apply down"""
     return {t.decode() for t, _, _ in
-            pynini.shortestpath((a(string)*transducer).project(True),
-                                nshortest=100).paths()}
+            pynini.shortestpath((a(string)*transducer).project(True).optimize(),
+                                nshortest=100,
+                                unique=True).paths()}
 
 def apply_up(transducer: pynini.Fst,
              string: str) -> Set[str]:
     """Mimics xfst/foma-style apply up"""
     return {t.decode() for t, _, _ in
-            pynini.shortestpath((transducer*a(string)).project(False),
-                                nshortest=100).paths()}
+            pynini.shortestpath((transducer*a(string)).project(False).optimize(),
+                                nshortest=100,
+                                unique=True).paths()}
 
 # TODO: determine what a reasonable way to set nshortest is.
 # TODO: it feels like a wart that these are outside the Level class. Possibly
@@ -165,7 +167,6 @@ class Form(object):
             warn("Rendering a form that is ambiguous at the requested level",
                  SurfaceAmbiguityWarning)
         if len(self.values) > 1:
-            print("FUCK")
             warn("Rendering a form that is ambiguous at the root level, but"
                  "not at the requested level",
                  UnderlyingAmbiguityWarning)

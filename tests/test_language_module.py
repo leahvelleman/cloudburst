@@ -10,11 +10,20 @@ from cloudburst.language import *
 chars = [chr(i) for i in range(32, 126) if i not in (91, 92, 93)]
 
 class UtilityTestCase(unittest.TestCase):
-    def test_apply(self):
+    def test_apply_up(self):
         self.assertEqual(apply_up(t("Foo", "Bar"), "Bar"), {"Foo"},
                          "apply_up gives unexpected result")
+
+    def test_apply_down(self):
         self.assertEqual(apply_down(t("Foo", "Bar"), "Foo"), {"Bar"},
                          "apply_down gives unexpected result")
+
+    def test_apply_up_ambiguous_cdrewrite(self):
+        self.assertEqual(
+            apply_up(
+                pynini.cdrewrite(t("a", "b"), "", "", m(chars).closure()),
+                "bbb"),
+            {"aaa", "aab", "aba", "abb", "baa", "bab", "bba", "bbb"})
 
 class LanguageTestCase(unittest.TestCase):
     def setUp(self):
@@ -48,9 +57,8 @@ class FormTestCase(unittest.TestCase):
     def setUp(self):
         self.lang = Language(m(chars).closure())
         self.level1 = self.lang.add_child(
-            pynini.cdrewrite(t("o", "a"), u(m(chars), "[EOS]"), u(m(chars),
-                                                                  "[EOS]"),
-                             m(chars).closure(), direction="sim"))
+            pynini.cdrewrite(t("o", "a"), "", "",
+                             m(chars).closure()))
         self.level2 = self.lang.add_child(
             pynini.cdrewrite(t("f", "p"), "", "", m(chars).closure()))
 
@@ -62,8 +70,8 @@ class FormTestCase(unittest.TestCase):
             self.form1 = self.level1("foo")
 
     def test_possible_roots(self):
-        self.assertEqual(self.level1.possible_roots("fafafa"),
-                         {"fofofo"})
+        self.assertEqual(self.level1.possible_roots("fafa"),
+                         {"fafa", "fafo", "fofa", "fofo"})
 
     def test_ambiguity(self):
         self.level3 = self.lang.add_child(
@@ -71,11 +79,12 @@ class FormTestCase(unittest.TestCase):
         self.level4 = self.level3.add_child(
             u(t("a", "a"), t("b", "a")))
         self.assertTrue(self.level4("a").is_ambiguous())
-        print(self.level4("a").values)
         with self.assertWarns(UnderlyingAmbiguityWarning):
-            print(self.level4("a"))
+            self.assertEqual(self.level4("a").__repr__(), "a")
         with self.assertWarns(SurfaceAmbiguityWarning):
-            print(~self.level4("a") >> self.level3)
+            self.assertCountEqual(
+                (~self.level4("a") >> self.level3).__repr__().split(", "),
+                ["a", "b"])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,8 +1,8 @@
 """ Language, Level, and Form objects
 """
+from typing import Iterable, List, Set
+from warnings import warn
 import pynini
-from pynini import union as u
-from pynini import transducer as t
 from pynini import acceptor as a
 
 def apply_down(transducer: pynini.Fst,
@@ -11,9 +11,15 @@ def apply_down(transducer: pynini.Fst,
     return (a(string)*transducer).project(True).stringify().decode()
 
 def apply_up(transducer: pynini.Fst,
-             string: str) -> str:
+             string: str) -> List[str]:
     """Mimics xfst/foma-style apply up"""
-    return (transducer*a(string)).project(False).stringify().decode()
+    return [t.decode() for t, _, _ in
+            pynini.shortestpath((transducer*a(string)).project(False),
+                                nshortest=5).paths()]
+
+# TODO: determine what a reasonable way to set nshortest is.
+# TODO: it feels like a wart that these are outside the Level class. Possibly
+# they should be turned into to_roots and from_root methods or some such.
 
 class Level(object):
     """A level of representation for language forms.
@@ -41,6 +47,7 @@ class Level(object):
                  parent: 'Level' = None) -> None:
         self.children = []
         self.derivation = derivation
+        self.fmt = lambda x: x
         if parent:
             self.language = parent.language
             self.parent = parent
@@ -49,6 +56,15 @@ class Level(object):
             self.parent = None
         self.converters = {self: derivation.copy().project(project_output=True)}
 
+    def __call__(self, content: str) -> 'Form':
+        values = self.possible_roots(content)
+        if not values:
+            raise InconsistentForm
+        return Form(values=values, levels_to_show=[self])
+
+    def possible_roots(self, content: str) -> List[str]:
+        """Convert the specified form from this level to the root level."""
+        return apply_up(self.language.converters[self], content)
 
     def add_child(self,
                   derivation: pynini.Fst) -> None:
@@ -110,6 +126,62 @@ class Language(Level):
         self.sigma_star = root_lexicon.closure()
         super().__init__(derivation=root_lexicon, parent=None)
 
+class Form(object):
+    """ A linguistic form. """
+    def __init__(self,
+                 levels_to_show: List[Level],
+                 values: Iterable[str]) -> None:
+        self.levels_to_show = levels_to_show
+        self.values = set(values)
+
+    def __invert__(self) -> 'Form':
+        return Form(levels_to_show=[], values=self.values)
+
+    def __and__(self, other) -> 'Form':
+        return Form(levels_to_show=(self.levels_to_show + other.levels_to_show),
+                    values=(self.values & other.values))
+
+    def __repr__(self) -> str:
+        renderings = self.at_levels(self.levels_to_show)
+        self._issue_ambiguity_warnings(renderings)
+        return ", ".join([" ".join(rendering) for rendering in renderings])
+
+    def __eq__(self, other) -> bool:
+        return self.values == other.values
+
+    def _issue_ambiguity_warnings(self, renderings) -> None:
+        """ Issue warnings for several kinds of ambiguity. """
+        if len(renderings) > 1:
+            warn("Rendering a form that is ambiguous at the requested level",
+                 SurfaceAmbiguityWarning)
+        elif len(self.values) > 1:
+            warn("Rendering a form that is ambiguous at the root level, but"
+                 "not at the requested level",
+                 UnderlyingAmbiguityWarning)
+
+    def is_ambiguous(self) -> bool:
+        """ True if this Form is ambiguous --- i.e., if it is consistent with
+        multiple underlying root representations. """
+        return len(self.values) > 1
+
+    def at_level(self, level: Level) -> Set[List[str]]:
+        """ The set of renderings of this form at a given level. """
+        return self.at_levels([level])
+
+    def at_levels(self, levels: Iterable[Level]) -> Set[List[str]]:
+        """ The set of *lists* of renderings of this form at a given *list* of
+        levels."""
+        out = set()
+        for value in self.values:
+            item = []
+            for level in levels:
+                converter = level.language.converters[level]
+                item.append(level.fmt(apply_down(converter, value)))
+            out.add(item)
+        return out
+
+
+
 
 
 
@@ -119,10 +191,16 @@ class Error(Exception):
     """ Generic error for this module. """
     pass
 
-if __name__ == "__main__":
-    l = Language(u(*"cat fox".split())+
-                 u(*"[+Sg] [+Pl]".split()))
-    b = l.add_child(pynini.cdrewrite(t("cat[+Pl]", "cats"),"","",l.sigma_star) *
-                    pynini.cdrewrite(t("fox[+Pl]", "foxes"),"","",l.sigma_star))
+class SurfaceAmbiguityWarning(Error):
+    """ A rendering has been requested of a Form that is ambiguous at some of
+    the requested Levels. """
+    pass
 
-    print((a("fox[+Pl]")* l.converters[b]).stringify())
+class UnderlyingAmbiguityWarning(Error):
+    """ A rendering has been requested of a Form that is ambiguous at the root
+    Level, but not at any of the requested Levels. """
+    pass
+
+class InconsistentForm(Error):
+    """ Attempting to create a form that can't meet all the specified criteria.
+    """

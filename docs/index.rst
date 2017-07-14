@@ -34,5 +34,4 @@ Cloudburst can do.
    
    self
    cloudburst
-   examples
-   index-personal
+   examples/examples

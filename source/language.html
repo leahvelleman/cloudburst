@@ -60,12 +60,9 @@
 
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">About</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../cloudburst.html">Cloudburst</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">language module</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../cloudburst.html">Cloudburst</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
 </ul>
 
@@ -96,17 +93,17 @@ ambiguous.</p>
 
 <dl class="class">
 <dt id="language.Form">
-<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>levels_to_show: typing.List[language.Level], values: typing.Iterable[str]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Form" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>levels_to_show</em>, <em>values</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Form" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>values</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) &#8211; An iterable containing a single key-level
+<li><strong>values</strong> (<code class="xref py py-class docutils literal"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal"><span class="pre">str</span></code>]) &#8211; An iterable containing a single key-level
 representation to create an unambiguous form, or multiple key-level
 representations to create an ambiguous one.</li>
-<li><strong>levels_to_show</strong> (<em>List</em><em>[</em><a class="reference internal" href="#language.Level" title="language.Level"><em>Level</em></a><em>]</em>) &#8211; An ordered list</li>
+<li><strong>levels_to_show</strong> (<code class="xref py py-class docutils literal"><span class="pre">List</span></code>[<a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a>]) &#8211; An ordered list</li>
 </ul>
 </td>
 </tr>
@@ -114,22 +111,46 @@ representations to create an ambiguous one.</li>
 </table>
 <dl class="method">
 <dt id="language.Form.at_level">
-<code class="descname">at_level</code><span class="sig-paren">(</span><em>level: language.Level</em><span class="sig-paren">)</span> &#x2192; typing.Set[typing.List[str]]<a class="headerlink" href="#language.Form.at_level" title="Permalink to this definition">¶</a></dt>
+<code class="descname">at_level</code><span class="sig-paren">(</span><em>level</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Form.at_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of renderings of this form at a given level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal"><span class="pre">str</span></code>]]</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="language.Form.at_levels">
-<code class="descname">at_levels</code><span class="sig-paren">(</span><em>levels: typing.Iterable[language.Level]</em><span class="sig-paren">)</span> &#x2192; typing.Set[typing.Tuple[str]]<a class="headerlink" href="#language.Form.at_levels" title="Permalink to this definition">¶</a></dt>
+<code class="descname">at_levels</code><span class="sig-paren">(</span><em>levels</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Form.at_levels" title="Permalink to this definition">¶</a></dt>
 <dd><p>The set of <em>lists</em> of renderings of this form at a given <em>list</em> of
 levels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal"><span class="pre">str</span></code>]]</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="language.Form.is_ambiguous">
-<code class="descname">is_ambiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#language.Form.is_ambiguous" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_ambiguous</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#language.Form.is_ambiguous" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if this Form is ambiguous &#8212; i.e., if it is consistent with
 multiple underlying root representations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -143,7 +164,7 @@ multiple underlying root representations.</p>
 
 <dl class="class">
 <dt id="language.Level">
-<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Level</code><span class="sig-paren">(</span><em>fst: pynini.Fst</em>, <em>parent: typing.Union[language.Level</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Level</code><span class="sig-paren">(</span><em>fst</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A level of representation for language forms.</p>
 <p>A level wraps a finite state transducer which converts keys into
@@ -224,7 +245,7 @@ at <cite>otherlevel</cite>.</p>
 
 <dl class="method">
 <dt id="language.Level.add_child">
-<code class="descname">add_child</code><span class="sig-paren">(</span><em>fst: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; language.Level<a class="headerlink" href="#language.Level.add_child" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_child</code><span class="sig-paren">(</span><em>fst</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.add_child" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add another level derived from this one using the specified FST.</p>
 <p>The <a class="reference internal" href="#language.Level.add_child" title="language.Level.add_child"><code class="xref py py-meth docutils literal"><span class="pre">add_child()</span></code></a> method automatically sets up converters between
 the newly created level and all other levels in its tree.</p>
@@ -232,12 +253,12 @@ the newly created level and all other levels in its tree.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fst</strong> (<em>pynini.Fst</em>) &#8211; A Pynini transducer which derives forms at the
-child level from forms at this one.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fst</strong> (<code class="xref py py-class docutils literal"><span class="pre">Fst</span></code>) &#8211; A Pynini transducer which derives forms at the child level
+from forms at this one.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The newly created level.</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#language.Level" title="language.Level">Level</a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The newly created level.</td>
 </tr>
 </tbody>
 </table>
@@ -245,23 +266,22 @@ child level from forms at this one.</td>
 
 <dl class="method">
 <dt id="language.Level.lookdown">
-<code class="descname">lookdown</code><span class="sig-paren">(</span><em>key: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.Level.lookdown" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookdown</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.lookdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the specified key to a set of forms from this level.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key to be converted.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; Key to be converted.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>Set containing a single form if the key is</dt>
-<dd>unambiguous, or multiple forms if it us ambiguous.
-TODO: Eventually, it should be the case that the latter never
-happens.</dd>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal"><span class="pre">str</span></code>]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>Set containing a single form if the key is unambiguous, or</dt>
+<dd>multiple forms if it us ambiguous.  TODO: Eventually, it should be the
+case that the latter never happens.</dd>
 </dl>
 </td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str}</td>
 </tr>
 </tbody>
 </table>
@@ -269,21 +289,18 @@ happens.</dd>
 
 <dl class="method">
 <dt id="language.Level.lookup">
-<code class="descname">lookup</code><span class="sig-paren">(</span><em>form: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.Level.lookup" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>form</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.lookup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the specified form from this level to a set of keys.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>form</strong> (<em>str</em>) &#8211; Form to be converted.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>form</strong> (<code class="xref py py-class docutils literal"><span class="pre">str</span></code>) &#8211; Form to be converted.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>Set containing a single key if the form is</dt>
-<dd>unambiguous, or multiple keys if it is ambiguous.</dd>
-</dl>
-</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal"><span class="pre">str</span></code>]</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str}</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set containing a single key if the form is unambiguous, or multiple
+keys if it is ambiguous.</td>
 </tr>
 </tbody>
 </table>
@@ -291,7 +308,7 @@ happens.</dd>
 
 <dl class="method">
 <dt id="language.Level.rewrite">
-<code class="descname">rewrite</code><span class="sig-paren">(</span><em>change</em>, <em>left_environment=''</em>, <em>right_environment=''</em>, <em>direction='ltr'</em>, <em>mode='obl'</em><span class="sig-paren">)</span> &#x2192; language.Level<a class="headerlink" href="#language.Level.rewrite" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rewrite</code><span class="sig-paren">(</span><em>change</em>, <em>left_environment=''</em>, <em>right_environment=''</em>, <em>direction='ltr'</em>, <em>mode='obl'</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.rewrite" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a level derived from this one by a context-dependent
 rewrite rule.</p>
 <p>This method wraps the built-in Pynini <code class="xref py py-meth docutils literal"><span class="pre">pynini.cdrewrite()</span></code>
@@ -304,19 +321,19 @@ instead of a bare Fst.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>change</strong> (<em>pynini.Fst</em>) &#8211; A pynini transducer representing the change to
+<li><strong>change</strong> &#8211; A pynini transducer representing the change to
 be made.</li>
-<li><strong>left_environment</strong> (<em>pynini.Fst</em><em> or </em><em>str</em>) &#8211; A pynini acceptor or string
+<li><strong>left_environment</strong> &#8211; A pynini acceptor or string
 representing the left environment for the change.</li>
-<li><strong>right_environment</strong> (<em>pynini.Fst</em><em> or </em><em>str</em>) &#8211; A pynini acceptor or
+<li><strong>right_environment</strong> &#8211; A pynini acceptor or
 string representing the right environment for the change.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The newly created level.</p>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a></p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#language.Level" title="language.Level">Level</a></p>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The newly created level.</p>
 </td>
 </tr>
 </tbody>
@@ -325,13 +342,15 @@ string representing the right environment for the change.</li>
 
 <dl class="method">
 <dt id="language.Level.walk">
-<code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.walk" title="Permalink to this definition">¶</a></dt>
+<code class="descname">walk</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.walk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Breadth-first traversal of this level and its children.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body"><a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-obj docutils literal"><span class="pre">Level</span></code></a> &#8211; The next level in the breadth-first traversal.</td>
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body">The next level in the breadth-first traversal.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Generator</span></code>[<a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a>, <code class="docutils literal"><span class="pre">None</span></code>, <code class="docutils literal"><span class="pre">None</span></code>]</td>
 </tr>
 </tbody>
 </table>
@@ -339,7 +358,7 @@ string representing the right environment for the change.</li>
 
 <dl class="method">
 <dt id="language.Level.walk_with_depth">
-<code class="descname">walk_with_depth</code><span class="sig-paren">(</span><em>level: int = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.walk_with_depth" title="Permalink to this definition">¶</a></dt>
+<code class="descname">walk_with_depth</code><span class="sig-paren">(</span><em>level=0</em><span class="sig-paren">)</span><a class="headerlink" href="#language.Level.walk_with_depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Breadth-first traversal of this level and its children, keeping
 track of the depth within the tree. Used to pretty-print the levels
 that make up a Language.</p>
@@ -347,8 +366,10 @@ that make up a Language.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body">(<a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-obj docutils literal"><span class="pre">Level</span></code></a>, int) &#8211; The next level in the breadth-first traversal,
-and a number indicating its depth, yielded as a tuple.</td>
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body">The next level in the breadth-first traversal, and a number
+indicating its depth, yielded as a tuple.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">Generator</span></code>[<code class="xref py py-class docutils literal"><span class="pre">Tuple</span></code>[<a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">int</span></code>], <code class="docutils literal"><span class="pre">None</span></code>, <code class="docutils literal"><span class="pre">None</span></code>]</td>
 </tr>
 </tbody>
 </table>

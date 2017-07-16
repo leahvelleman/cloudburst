@@ -42,15 +42,18 @@ a.current.reference.internal:hover {
     border: none;
 }
 
+body {
+    font-family: "calibri";
+}
+
+table.field-list th {
+    width: 100px;
 }
 
 div.sphinxsidebar a.tag {
     color: #786;
 }
 
-body{
-  font-family: "brill";
-}
 
 div.footer {
     text-align: left;
@@ -82,10 +85,6 @@ table.docutils col {
   width: auto;
 }
 
-code {
-  font-size: 0.9em;
-}
-
 table.docutils {
   border: none;
   margin-left: 1em;
@@ -102,11 +101,6 @@ table.footnote {
     background: #fff;
 }
 
-strong { 
-  font-size: 0.9em;
-  font-family: 'calibri', 'noto sans';
-  font-weight: normal;
-}
 
 
 

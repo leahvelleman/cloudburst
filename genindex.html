@@ -86,7 +86,6 @@
  <a href="#A"><strong>A</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
- | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -106,12 +105,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/language.html#language.Level.add_child">add_child() (language.Level method)</a>
 </li>
-      <li><a href="source/language.html#language.apply_down">apply_down() (in module language)</a>
+      <li><a href="source/language.html#language.AmbiguousDerivation">AmbiguousDerivation</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/language.html#language.apply_up">apply_up() (in module language)</a>
-</li>
       <li><a href="source/language.html#language.Form.at_level">at_level() (language.Form method)</a>
 </li>
       <li><a href="source/language.html#language.Form.at_levels">at_levels() (language.Form method)</a>
@@ -137,24 +134,16 @@
       <li><a href="source/word.html#word.depart_word_node">depart_word_node() (in module word)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/language.html#language.Level.derivation">derivation (language.Level attribute)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="E">E</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/language.html#language.Error">Error</a>
-</li>
-  </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/language.html#language.Form">Form (class in language)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/language.html#language.Level.fst">fst (language.Level attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -176,27 +165,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/language.html#language.Form.is_ambiguous">is_ambiguous() (language.Form method)</a>
 </li>
-      <li><a href="source/language.html#language.Level.is_root">is_root() (language.Level method)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/language.html#language.Language">Language (class in language)</a>
-</li>
       <li><a href="source/language.html#language.Level.language">language (language.Level attribute)</a>
 
       <ul>
         <li><a href="source/language.html#module-language">(module)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/word.html#word.LemmaDirective">LemmaDirective (class in word)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/language.html#language.Level">Level (class in language)</a>
+</li>
+      <li><a href="source/language.html#language.Level.lookdown">lookdown() (language.Level method)</a>
+</li>
+      <li><a href="source/language.html#language.Level.lookup">lookup() (language.Level method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -228,12 +217,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/language.html#language.Level.parent">parent (language.Level attribute)</a>
 </li>
-      <li><a href="source/language.html#language.Level.possible_roots">possible_roots() (language.Level method)</a>
+      <li><a href="source/word.html#word.process_word_nodes">process_word_nodes() (in module word)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/word.html#word.process_word_nodes">process_word_nodes() (in module word)</a>
-</li>
       <li><a href="source/word.html#word.process_wordlist">process_wordlist() (in module word)</a>
 </li>
       <li><a href="source/word.html#word.purge_words">purge_words() (in module word)</a>
@@ -245,6 +232,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/word.html#word.resolve_lexical_entries">resolve_lexical_entries() (in module word)</a>
+</li>
+      <li><a href="source/language.html#language.Level.rewrite">rewrite() (language.Level method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -264,8 +253,6 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/language.html#language.Language.sigma_star">sigma_star (language.Language attribute)</a>
-</li>
       <li><a href="source/language.html#language.SurfaceAmbiguityWarning">SurfaceAmbiguityWarning</a>
 </li>
   </ul></td>

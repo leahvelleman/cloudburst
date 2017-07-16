@@ -87,17 +87,31 @@
 <span id="language-module"></span><h1>language module<a class="headerlink" href="#module-language" title="Permalink to this headline">¶</a></h1>
 <p>Language, Level, and Form objects</p>
 <dl class="exception">
-<dt id="language.Error">
-<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">Error</code><a class="headerlink" href="#language.Error" title="Permalink to this definition">¶</a></dt>
+<dt id="language.AmbiguousDerivation">
+<em class="property">exception </em><code class="descclassname">language.</code><code class="descname">AmbiguousDerivation</code><a class="headerlink" href="#language.AmbiguousDerivation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
-<p>Generic error for this module.</p>
+<p>Attempting to create a level with a derivation that is downward
+ambiguous.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="language.Form">
 <em class="property">class </em><code class="descclassname">language.</code><code class="descname">Form</code><span class="sig-paren">(</span><em>levels_to_show: typing.List[language.Level], values: typing.Iterable[str]</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Form" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>A linguistic form.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>values</strong> (<em>Iterable</em><em>[</em><em>str</em><em>]</em>) &#8211; An iterable containing a single key-level
+representation to create an unambiguous form, or multiple key-level
+representations to create an ambiguous one.</li>
+<li><strong>levels_to_show</strong> (<em>List</em><em>[</em><a class="reference internal" href="#language.Level" title="language.Level"><em>Level</em></a><em>]</em>) &#8211; An ordered list</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="language.Form.at_level">
 <code class="descname">at_level</code><span class="sig-paren">(</span><em>level: language.Level</em><span class="sig-paren">)</span> &#x2192; typing.Set[typing.List[str]]<a class="headerlink" href="#language.Form.at_level" title="Permalink to this definition">¶</a></dt>
@@ -128,43 +142,56 @@ multiple underlying root representations.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="language.Language">
-<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Language</code><span class="sig-paren">(</span><em>key_lexicon: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Language" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">language.Level</span></code></a></p>
-<p>A language.</p>
-<p>In Cloudburst a language is made up of one or more levels of
-representation.  Forms that are identical at the key level are treated as
-identical for other purposes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key_lexicon</strong> &#8211; A Pynini acceptor that will provide a lexicon for the key
-level of the language.</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="language.Language.sigma_star">
-<code class="descname">sigma_star</code><a class="headerlink" href="#language.Language.sigma_star" title="Permalink to this definition">¶</a></dt>
-<dd><p>A Pynini acceptor representing the closure over the
-alphabet of the language.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="language.Level">
-<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Level</code><span class="sig-paren">(</span><em>derivation: pynini.Fst</em>, <em>parent: typing.Union[language.Level</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">language.</code><code class="descname">Level</code><span class="sig-paren">(</span><em>fst: pynini.Fst</em>, <em>parent: typing.Union[language.Level</em>, <em>NoneType] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>A level of representation for language forms.</p>
+<p>A level wraps a finite state transducer which converts keys into
+strings. The level provides <a class="reference internal" href="#language.Level.lookup" title="language.Level.lookup"><code class="xref py py-func docutils literal"><span class="pre">lookup()</span></code></a> and <a class="reference internal" href="#language.Level.lookdown" title="language.Level.lookdown"><code class="xref py py-func docutils literal"><span class="pre">lookdown()</span></code></a> functions
+to apply this transducer in both directions.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">L</span> <span class="o">=</span> <span class="n">Language</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;guapo&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span><span class="o">.</span><span class="n">lookdown</span><span class="p">(</span><span class="s2">&quot;handsome[+Adj][+Masc][+Sg]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A level also provides convenience functions for defining new levels based
+on it. For instance, if you already have a level whose <a class="reference internal" href="#language.Level.lookdown" title="language.Level.lookdown"><code class="xref py py-func docutils literal"><span class="pre">lookdown()</span></code></a>
+function turns keys into written words, you might use it as the basis for a
+new level representing pronunciation.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pronunciation</span> <span class="o">=</span> <span class="n">spelling</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pronunciation</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;gera&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Levels created in this way form a tree, and strings can be converted
+between any two levels that belong to the same tree, using conversion
+functions stored in the <a class="reference internal" href="#language.Level.converters" title="language.Level.converters"><code class="xref py py-attr docutils literal"><span class="pre">converters</span></code></a> attribute.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pronunciation</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="n">spelling</span><span class="p">](</span><span class="s2">&quot;gera&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, a level can be called with a string argument to produce a Sphinx
+document tree node representing it. The <cite>&amp;</cite> operator can be used as a
+shortcut to combine several levels of representations in a single document
+tree node.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span><span class="p">(</span><span class="s2">&quot;guerra&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span><span class="p">(</span><span class="s2">&quot;guerra&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">pronunciation</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">spelling</span> <span class="o">&amp;</span> <span class="n">pronunciation</span><span class="p">(</span><span class="s2">&quot;gera&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="attribute">
-<dt id="language.Level.derivation">
-<code class="descname">derivation</code><a class="headerlink" href="#language.Level.derivation" title="Permalink to this definition">¶</a></dt>
-<dd><p>If this is the key level of its language, a Pynini
-acceptor constituting the key lexicon. If this is a child level, a
-pynini transducer deriving representations at this level from
-representations at the parent level.</p>
+<dt id="language.Level.fst">
+<code class="descname">fst</code><a class="headerlink" href="#language.Level.fst" title="Permalink to this definition">¶</a></dt>
+<dd><p>If this level is a key level, <a class="reference internal" href="#language.Level.fst" title="language.Level.fst"><code class="xref py py-attr docutils literal"><span class="pre">fst</span></code></a> is a Pynini acceptor
+representing the possible keys. If it is a derived level, <a class="reference internal" href="#language.Level.fst" title="language.Level.fst"><code class="xref py py-attr docutils literal"><span class="pre">fst</span></code></a>
+is a Pynini transducer deriving it from its parent level.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -197,21 +224,103 @@ at <cite>otherlevel</cite>.</p>
 
 <dl class="method">
 <dt id="language.Level.add_child">
-<code class="descname">add_child</code><span class="sig-paren">(</span><em>derivation: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#language.Level.add_child" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the specified node as a child of mine, and set up converters
-between it and all the nodes I can convert to or from.</p>
+<code class="descname">add_child</code><span class="sig-paren">(</span><em>fst: pynini.Fst</em><span class="sig-paren">)</span> &#x2192; language.Level<a class="headerlink" href="#language.Level.add_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add another level derived from this one using the specified FST.</p>
+<p>The <a class="reference internal" href="#language.Level.add_child" title="language.Level.add_child"><code class="xref py py-meth docutils literal"><span class="pre">add_child()</span></code></a> method automatically sets up converters between
+the newly created level and all other levels in its tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fst</strong> (<em>pynini.Fst</em>) &#8211; A Pynini transducer which derives forms at the
+child level from forms at this one.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The newly created level.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#language.Level" title="language.Level">Level</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="language.Level.is_root">
-<code class="descname">is_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#language.Level.is_root" title="Permalink to this definition">¶</a></dt>
-<dd><p>True if this node is a root node.</p>
+<dt id="language.Level.lookdown">
+<code class="descname">lookdown</code><span class="sig-paren">(</span><em>key: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.Level.lookdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the specified key to a set of forms from this level.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key to be converted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>Set containing a single form if the key is</dt>
+<dd>unambiguous, or multiple forms if it us ambiguous.
+TODO: Eventually, it should be the case that the latter never
+happens.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str}</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="language.Level.possible_roots">
-<code class="descname">possible_roots</code><span class="sig-paren">(</span><em>content: str</em><span class="sig-paren">)</span> &#x2192; typing.List[str]<a class="headerlink" href="#language.Level.possible_roots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the specified form from this level to the root level.</p>
+<dt id="language.Level.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>form: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.Level.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the specified form from this level to a set of keys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>form</strong> (<em>str</em>) &#8211; Form to be converted.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>Set containing a single key if the form is</dt>
+<dd>unambiguous, or multiple keys if it is ambiguous.</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="language.Level.rewrite">
+<code class="descname">rewrite</code><span class="sig-paren">(</span><em>change</em>, <em>left_environment=''</em>, <em>right_environment=''</em>, <em>direction='ltr'</em>, <em>mode='obl'</em><span class="sig-paren">)</span> &#x2192; language.Level<a class="headerlink" href="#language.Level.rewrite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a level derived from this one by a context-dependent
+rewrite rule.</p>
+<p>This method wraps the built-in Pynini <code class="xref py py-meth docutils literal"><span class="pre">pynini.cdrewrite()</span></code>
+method. It provides friendlier argument names (in particular, avoiding
+the keyword <cite>lambda</cite>), takes care of specifying the correct
+<cite>sigma_star</cite>, and ensures that the result is a <a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-class docutils literal"><span class="pre">Level</span></code></a> object
+instead of a bare Fst.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>change</strong> (<em>pynini.Fst</em>) &#8211; A pynini transducer representing the change to
+be made.</li>
+<li><strong>left_environment</strong> (<em>pynini.Fst</em><em> or </em><em>str</em>) &#8211; A pynini acceptor or string
+representing the left environment for the change.</li>
+<li><strong>right_environment</strong> (<em>pynini.Fst</em><em> or </em><em>str</em>) &#8211; A pynini acceptor or
+string representing the right environment for the change.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The newly created level.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#language.Level" title="language.Level">Level</a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -234,10 +343,15 @@ between it and all the nodes I can convert to or from.</p>
 <dd><p>Breadth-first traversal of this level and its children, keeping
 track of the depth within the tree. Used to pretty-print the levels
 that make up a Language.</p>
-<dl class="docutils">
-<dt>Yields: The next level in the breadth-first traversal, and</dt>
-<dd>a number indicating its depth, yielded as a tuple.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Yields:</th><td class="field-body">(<a class="reference internal" href="#language.Level" title="language.Level"><code class="xref py py-obj docutils literal"><span class="pre">Level</span></code></a>, int) &#8211; The next level in the breadth-first traversal,
+and a number indicating its depth, yielded as a tuple.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -256,62 +370,6 @@ the requested Levels.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Warning</span></code></p>
 <p>A rendering has been requested of a Form that is ambiguous at the root
 Level, but not at any of the requested Levels.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="language.apply_down">
-<code class="descclassname">language.</code><code class="descname">apply_down</code><span class="sig-paren">(</span><em>transducer: pynini.Fst</em>, <em>string: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.apply_down" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mimics xfst/foma-style apply down.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>transducer</strong> &#8211; A finite state transducer.</li>
-<li><strong>string</strong> &#8211; A string to apply at the top side of <cite>transducer</cite>.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><dl class="docutils">
-<dt>A set of strings that can be read off the bottom side of</dt>
-<dd><p class="first last"><cite>transducer</cite> when applying <cite>string</cite> at the top side.</p>
-</dd>
-</dl>
-</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Set[str]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="language.apply_up">
-<code class="descclassname">language.</code><code class="descname">apply_up</code><span class="sig-paren">(</span><em>transducer: pynini.Fst</em>, <em>string: str</em><span class="sig-paren">)</span> &#x2192; typing.Set[str]<a class="headerlink" href="#language.apply_up" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mimics xfst/foma-style apply up.</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>Args:</dt>
-<dd>transducer: A finite state transducer.
-string: A string to apply at the bottom side of <cite>transducer</cite>.</dd>
-</dl>
-</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
-<dt>A set of strings that can be read off the top side of</dt>
-<dd><cite>transducer</cite> when applying <cite>string</cite> at the bottom side.</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Set[str]</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

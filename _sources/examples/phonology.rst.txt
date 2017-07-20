@@ -40,7 +40,7 @@ underdot do not occur on the same vowel.
 The indigenous Nēa writing system is syllabic rather than alphabetic. Its
 original name is simply *menậni* 'writing', but to contrast it with the roman
 *‘acéhili* it can also be called the *‘apétici*, after its first four syllables
-**PI TI CI**.
+PI TI CI.
 
 Consonants
 ##########
@@ -50,70 +50,70 @@ Nēa has nine consonant phonemes:
 .. csv-table::
    :align: center
 
-   **p**, **t**, **k**, **ʔ**
-   **m**, **n**,  , 
-        , **r**,, **h**
-        , **l**,,
+   p, t, k, ʔ
+   m, n,  , 
+        , r,, h
+        , l,,
 
-The phoneme **/k/** is spelled *c*. For English-speakers, this is a reminder
-of a pattern of allophony: before the front vowels **/e/** and **/i/**,
-this phoneme is pronounced **[s]**. 
+The phoneme /k/ is spelled *c*. For English-speakers, this is a reminder
+of a pattern of allophony: before the front vowels /e/ and /i/,
+this phoneme is pronounced [s]. 
 
-The glides **[w j]**, though not phonemic, are frequent in Nēa. They are allophones
-of **/u i/** before another vowel --- either in the same word or between words in
+The glides [w j], though not phonemic, are frequent in Nēa. They are allophones
+of /u i/ before another vowel --- either in the same word or between words in
 a phrase --- and are written *u i*. 
 
 .. csv-table::
 
-   `rérui`, **[ré.rwi]**, 'make noise'
-   `óio`,   **[ó.jo]**,   ‘oil’
-   `ni lāpi ạ énu ta`, **[ni.láá.pjà̰é.nu.tə]**, 'I want you to realize'
+   `rérui`, [ré.rwi], 'make noise'
+   `óio`,   [ó.jo],   ‘oil’
+   `ni lāpi ạ énu ta`, [ni.láá.pjà̰é.nu.tə], 'I want you to realize'
 
-In environments where **/i/** would become **[j]**, sequences of an alveolar
-consonant followed by **/i/** become palatal or palatalized consonants:
-**/tiV/ → [tʃV], /niV/ → [ɲV], /liV/ → [ʎV],** and **/riV/ → [ʝV]**.
-And in the same environments, **/ki/** --- normally pronounced **[si]** ---
-palatalizes as well: **/kiV/ → [ʃV]**. These changes lead to alternations
+In environments where /i/ would become [j], sequences of an alveolar
+consonant followed by /i/ become palatal or palatalized consonants:
+/tiV/ → [tʃV], /niV/ → [ɲV], /liV/ → [ʎV], and /riV/ → [ʝV].
+And in the same environments, /ki/ --- normally pronounced [si] ---
+palatalizes as well: /kiV/ → [ʃV]. These changes lead to alternations
 at word boundaries depending on whether the following word begins with
 a vowel or a consonant:
 
 .. csv-table::
 
-  `to cahụ́ti apō`, **[to.kə.hṵ̀.tʃə.póó]**, 'on the shelf'
-  `to cahụ́ti ‘ilō`, **[to.kə.hṵ̀.ti.ʔi.lóó]**, 'under the shelf' |break|
-  `ni ọ́mo`,        **[ɲò̰.mo]**,            'I wash you/hir/it'
-  `ni ‘ọ́lo`,       **[ni.ʔò̰.lo]**,         'I say it'           |break|
-  `âpe li otōca`,  **[aá.pe.ʎo.tóó.ka]**,  'I played it'
-  `âpe li rị̂ca`,   **[aá.pe.li.rḭ̀í.kə]**,  'I found you/hir/it'
+  `to cahụ́ti apō`, [to.kə.hṵ̀.tʃə.póó], 'on the shelf'
+  `to cahụ́ti ‘ilō`, [to.kə.hṵ̀.ti.ʔi.lóó], 'under the shelf' |break|
+  `ni ọ́mo`,        [ɲò̰.mo],            'I wash you/hir/it'
+  `ni ‘ọ́lo`,       [ni.ʔò̰.lo],         'I say it'           |break|
+  `âpe li otōca`,  [aá.pe.ʎo.tóó.ka],  'I played it'
+  `âpe li rị̂ca`,   [aá.pe.li.rḭ̀í.kə],  'I found you/hir/it'
 
 The full set of consonant *sounds* in Nēa is thus considerably larger than
 the set of *phonemes*:
 
 .. csv-table::
 
-   **p**, **t**, **tʃ**, **k**, **ʔ**
-    , **s**, **ʃ**,   , **h**
-   **m**, **n**, **ɲ**,   ,
-    , **l**, **ʎ**,   ,
-    , **r**, **ʝ**,   ,
+   p, t, tʃ, k, ʔ
+    , s, ʃ,   , h
+   m, n, ɲ,   ,
+    , l, ʎ,   ,
+    , r, ʝ,   ,
 
 Vowels, stress, and tone
 ########################
 
-Nēa has five phonemic vowel qualities, **/a e i o u/**, which can combine to form
-six diphthongs, **/ai ae au ao oe eo/**. In stressed syllables, vowels can be long
-as well as short. When unstressed, **/a/** is pronounced **[ə]**. The diphthongs **/ai au/**
-are pronounced **[əɪ əʊ]** even when stressed.
+Nēa has five phonemic vowel qualities, /a e i o u/, which can combine to form
+six diphthongs, /ai ae au ao oe eo/. In stressed syllables, vowels can be long
+as well as short. When unstressed, /a/ is pronounced [ə]. The diphthongs /ai au/
+are pronounced [əɪ əʊ] even when stressed.
 
-In the rare case where unstressed prevocalic **/u/** does not become **/w/**,
-or where unstressed prevocalic **/i/** does not become **/j/**, it is written 
-with a dieresis. These are analyzed phonemically as sequences of two **/u/**'s or
-two **/i/**'s in a row.
+In the rare case where unstressed prevocalic /u/ does not become /w/,
+or where unstressed prevocalic /i/ does not become /j/, it is written 
+with a dieresis. These are analyzed phonemically as sequences of two /u/'s or
+two /i/'s in a row.
 
 .. csv-table::
 
-   `ẹ́lüa`,  **[ḛ̀.lu.ə]**,  'set free'
-   `‘Ánïa`, **[ʔá.ni.ə]**, men's name
+   `ẹ́lüa`,  [ḛ̀.lu.ə],  'set free'
+   `‘Ánïa`, [ʔá.ni.ə], men's name
 
 
 Stressed syllables have tone. There are six possibilities. The first two (*sharp*)
@@ -125,12 +125,12 @@ by a glottal stop.
 .. csv-table::
    :widths: auto
 
-   *á*,  (clear) sharp,  **[á]**,  "short, high pitch"
-   *ạ́*,  broken sharp,   **[à̰]**,  "short, low pitch, creaky voice"
-   *ā*, (clear) level,   **[áá]**, "long, high pitch"
-   *ạ̄*, broken level,    **[áˀá]**, "long, high pitch, interrupted by a glottal stop"
-   *â*, (clear) rising,  **[aá]**, "long, mid-rising pitch"
-   *ậ*, broken rising,   **[à̰á]**, "long, low-rising pitch, creaky voice on first half"
+   *á*,  (clear) sharp,  [á],  "short, high pitch"
+   *ạ́*,  broken sharp,   [à̰],  "short, low pitch, creaky voice"
+   *ā*, (clear) level,   [áá], "long, high pitch"
+   *ạ̄*, broken level,    [áˀá], "long, high pitch, interrupted by a glottal stop"
+   *â*, (clear) rising,  [aá], "long, mid-rising pitch"
+   *ậ*, broken rising,   [à̰á], "long, low-rising pitch, creaky voice on first half"
 
 A single syllable with a broken vowel is sometimes easy to confuse with a pair of
 syllables separated by a glottal stop. The confusion is especially easy in the case of
@@ -141,9 +141,9 @@ these words, pronounced with the same segments but different melodies:
 
 .. csv-table::
    
-   `‘ạ̄i`, **[ʔáˀí]**, ‘water’
-   `‘á‘i`,**[ʔá.ʔi]**, "‘judgment, perception'"
-   `‘a‘í`,**[ʔa.ʔí]**, ‘someday'
+   `‘ạ̄i`, [ʔáˀí], ‘water’
+   `‘á‘i`,[ʔá.ʔi], "‘judgment, perception'"
+   `‘a‘í`,[ʔa.ʔí], ‘someday'
 
 Except for a few interjections like `ēō` ‘whoa!’, there can only be one stressed
 syllable in a prosodic word. But prosodic words do not match up one-to-one with 
@@ -152,9 +152,9 @@ onomatopoeia, loanwords, and compounds --- take up more than one prosodic word.
 
 .. csv-table::
 
-   `câ pâ`,      **[kaá paá]**,      ‘sound of small explosions’
-   `hēne pị́ti`,  **[héé.ne pḭí.ti]**, type of horse (from Skoa *ʃeːɲ ɓit*)
-   `muála ciọ́ho`,**[mwá.lɐ ʃò̰.ho]**, ‘buck dance’
+   `câ pâ`,      [kaá paá],      ‘sound of small explosions’
+   `hēne pị́ti`,  [héé.ne pḭí.ti], type of horse (from Skoa *ʃeːɲ ɓit*)
+   `muála ciọ́ho`,[mwá.lɐ ʃò̰.ho], ‘buck dance’
 
 And on the other hand, some lexical words, called *clitics*, are short words that
 cannot make up a prosodic word on their own.
@@ -169,10 +169,10 @@ and in the second group it has stress pushed onto it.
 
 .. csv-table::
 
-   `co tạ̄na‘i`,   **[ko.táˀá.nə.ʔi]**,  ‘the article’
-   `co cệpa`,     **[ko.sḛé.pə]**,      ‘the herbs’       |break|
-   `có muru`,     **[kó.mu.ru]**,       ‘the boy’
-   `cọ́ cu`,       **[kò̰.ku]**,          ‘the dog’
+   `co tạ̄na‘i`,   [ko.táˀá.nə.ʔi],  ‘the article’
+   `co cệpa`,     [ko.sḛé.pə],      ‘the herbs’       |break|
+   `có muru`,     [kó.mu.ru],       ‘the boy’
+   `cọ́ cu`,       [kò̰.ku],          ‘the dog’
 
 There are two kinds of clitic. *Proclitics* --- like `co` above --- come before their
 hosts. In Nēa they are usually stressless but can have stress pushed onto them. *Enclitics*,
@@ -186,10 +186,10 @@ noun, but adding the enclitic `u` pulls the stress forward again.
 
 .. csv-table::
 
-   `náta no ciọ́ho`,  **ná.tə.no.ʃò̰.ho**,    'you (pl) dance'
-   `to ciohọ̄ tae`, **to.ʃo.hóˀó.tae**,   'for you (pl) to dance'    |break|
-   `cị́ tama`, **sḭ̀.tə.mə**, 'my mat'
-   `ci tạ́ma ‘u`,  **si.tə̰̀.mə.ʔu**,    'our mats'
+   `náta no ciọ́ho`,  ná.tə.no.ʃò̰.ho,    'you (pl) dance'
+   `to ciohọ̄ tae`, to.ʃo.hóˀó.tae,   'for you (pl) to dance'    |break|
+   `cị́ tama`, sḭ̀.tə.mə, 'my mat'
+   `ci tạ́ma ‘u`,  si.tə̰̀.mə.ʔu,    'our mats'
    
 Enclitics in turn can be divided into two groups. The first are the *second position*
 enclitics. These are attached to the first available host in a particular group of
@@ -204,8 +204,8 @@ second position enclitic `‘u` can attach to.
 
 .. csv-table::
 
-   `ci anête ‘u lo`,     **ʃə.neé.te.ʔu.lo**,       'our spears yonder'
-   `âpa ‘u ni anête lo`, **aá.pə.ʔu.ɲə.neé.te.lo**, 'those were our spears'
+   `ci anête ‘u lo`,     ʃə.neé.te.ʔu.lo,       'our spears yonder'
+   `âpa ‘u ni anête lo`, aá.pə.ʔu.ɲə.neé.te.lo, 'those were our spears'
 
    
 Prosodic paradigms
@@ -287,11 +287,11 @@ Between that stage and modern Nēa, a few changes happened:
      This allowed long vowels and diphthongs to be glottalized: `*ʔoóloˀ` → `*ʔoóˀlo`
      → `'ộlo` 'say'.
   3. Unstressed long vowels shortened: `*tíʔaa` → `tí‘a` 'uncle'.
-  4. Unstressed prevocalic `*i` `*u` became **/j w/** in all but a few
-     contexts: `*páˀnia` → `pạ́nia` **[pə̰̀.ɲə]** 'dry'. (In native vocabulary,
+  4. Unstressed prevocalic `*i` `*u` became /j w/ in all but a few
+     contexts: `*páˀnia` → `pạ́nia` [pə̰̀.ɲə] 'dry'. (In native vocabulary,
      the dieresis marks reflexes of the few instances of `*i` and `*u` that
      didn't go through this change: `*éˀlua` → `ẹ́lüa` 'set free',
-     pronounced **[ḛ̀.lu.a]** not **[ḛ̀.lwa]**.)
+     pronounced [ḛ̀.lu.a] not [ḛ̀.lwa].)
 
 After these changes came a great deal of regularization. A word's prosdy had always changed
 when a one-syllable enclitic was added, as in the second set of examples below. But

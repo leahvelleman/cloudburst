@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>cloudburst.language &#8212; Cloudburst 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for cloudburst.language</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=fixme</span>
+<span class="sd">&quot;&quot;&quot; Language, Level, and Form objects</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="k">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Generator</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="k">import</span> <span class="n">warn</span>
+<span class="kn">import</span> <span class="nn">pynini</span>
+<span class="kn">from</span> <span class="nn">pynini</span> <span class="k">import</span> <span class="n">union</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span> <span class="nn">.fst_utils</span> <span class="k">import</span> <span class="n">apply_up</span><span class="p">,</span> <span class="n">apply_down</span><span class="p">,</span> <span class="n">get_sigma</span><span class="p">,</span> <span class="n">m</span>
+
+<div class="viewcode-block" id="Level"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level">[docs]</a><span class="k">class</span> <span class="nc">Level</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A level of representation for language forms.</span>
+
+<span class="sd">    A level wraps a finite state transducer which converts keys into</span>
+<span class="sd">    strings. The level provides :func:`lookup` and :func:`lookdown` functions</span>
+<span class="sd">    to apply this transducer in both directions.</span>
+
+<span class="sd">    &gt;&gt;&gt; L = Language(...)</span>
+<span class="sd">    &gt;&gt;&gt; spelling = L.add_child(...)</span>
+<span class="sd">    &gt;&gt;&gt; spelling.lookup(&quot;guapo&quot;)</span>
+
+<span class="sd">    &gt;&gt;&gt; spelling.lookdown(&quot;handsome[+Adj][+Masc][+Sg]&quot;)</span>
+
+<span class="sd">    A level also provides convenience functions for defining new levels based</span>
+<span class="sd">    on it. For instance, if you already have a level whose :func:`lookdown`</span>
+<span class="sd">    function turns keys into written words, you might use it as the basis for a</span>
+<span class="sd">    new level representing pronunciation.</span>
+
+<span class="sd">    &gt;&gt;&gt; pronunciation = spelling.add_child(...)</span>
+
+<span class="sd">    &gt;&gt;&gt; pronunciation.lookup(&quot;gera&quot;)</span>
+
+<span class="sd">    Levels created in this way form a tree, and strings can be converted</span>
+<span class="sd">    between any two levels that belong to the same tree, using conversion</span>
+<span class="sd">    functions stored in the :attr:`~Level.converters` attribute.</span>
+
+<span class="sd">    &gt;&gt;&gt; pronunciation.converters[spelling](&quot;gera&quot;)</span>
+
+<span class="sd">    Finally, a level can be called with a string argument to produce a Sphinx</span>
+<span class="sd">    document tree node representing it. The `&amp;` operator can be used as a</span>
+<span class="sd">    shortcut to combine several levels of representations in a single document</span>
+<span class="sd">    tree node.</span>
+
+<span class="sd">    &gt;&gt;&gt; spelling(&quot;guerra&quot;)</span>
+
+<span class="sd">    &gt;&gt;&gt; spelling(&quot;guerra&quot;) &amp; pronunciation</span>
+
+<span class="sd">    &gt;&gt;&gt; spelling &amp; pronunciation(&quot;gera&quot;)</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        fst: If this level is a key level, :attr:`fst` is a Pynini acceptor</span>
+<span class="sd">            representing the possible keys. If it is a derived level,</span>
+<span class="sd">            :attr:`fst` is a Pynini transducer deriving it from its parent</span>
+<span class="sd">            level.</span>
+<span class="sd">        parent: The parent level that this one is defined in terms of; `None`</span>
+<span class="sd">            if this is the key level of its language.</span>
+<span class="sd">        children: A list of levels that are defined in terms of this one.</span>
+<span class="sd">        converters: If `thislevel` and `otherlevel` are levels in the same</span>
+<span class="sd">            language, ``thislevel.converters[otherlevel]`` is a transducer</span>
+<span class="sd">            converting from representations at `thislevel` to representations</span>
+<span class="sd">            at `otherlevel`.</span>
+<span class="sd">        language: Language this level belongs to.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">fst</span><span class="p">:</span> <span class="n">pynini</span><span class="o">.</span><span class="n">Fst</span><span class="p">,</span>
+                 <span class="n">parent</span><span class="p">:</span> <span class="s1">&#39;Level&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1">#        self.__check_fst(fst)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fst</span> <span class="o">=</span> <span class="n">fst</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="p">:</span> <span class="n">fst</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">project_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">parent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">language</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__connect_to_parent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">get_sigma</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fst</span><span class="o">.</span><span class="n">output_symbols</span><span class="p">())</span>
+
+<span class="c1">#    def __check_fst(_, fst: pynini.Fst) -&gt; None:</span>
+<span class="c1">#        fpcf = (fst.copy().invert()*fst)</span>
+<span class="c1">#        if not pynini.equivalent(pynini.project(fpcf, True).optimize(),</span>
+<span class="c1">#                                 pynini.project(fpcf, False).optimize()):</span>
+<span class="c1">#            raise AmbiguousDerivation</span>
+
+    <span class="k">def</span> <span class="nf">__connect_to_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="s1">&#39;Level&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;&quot; Compose a converter between myself and each node my parent</span>
+<span class="sd">        connects to. &quot;&quot;&quot;</span>
+        <span class="n">fst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fst</span>
+        <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">converters</span><span class="p">):</span>
+            <span class="n">target</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="n">pynini</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="n">parent</span><span class="p">],</span> <span class="n">fst</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">pynini</span><span class="o">.</span><span class="n">compose</span><span class="p">(</span>
+                <span class="n">fst</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">invert</span><span class="p">(),</span> <span class="n">parent</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InconsistentForm</span>
+        <span class="k">return</span> <span class="n">Form</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">,</span> <span class="n">levels_to_show</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Level.lookup"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Convert the specified form from this level to a set of keys.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form: Form to be converted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set containing a single key if the form is unambiguous, or multiple</span>
+<span class="sd">            keys if it is ambiguous.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">apply_up</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="bp">self</span><span class="p">],</span> <span class="n">form</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Level.lookdown"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.lookdown">[docs]</a>    <span class="k">def</span> <span class="nf">lookdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Convert the specified key to a set of forms from this level.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key:  Key to be converted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set containing a single form if the key is unambiguous, or</span>
+<span class="sd">                multiple forms if it us ambiguous.  TODO: Eventually, it should</span>
+<span class="sd">                be the case that the latter never happens.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">apply_down</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="bp">self</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Level.add_child"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.add_child">[docs]</a>    <span class="k">def</span> <span class="nf">add_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                  <span class="n">fst</span><span class="p">:</span> <span class="n">pynini</span><span class="o">.</span><span class="n">Fst</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Level&#39;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Add another level derived from this one using the specified FST.</span>
+
+<span class="sd">        The :meth:`add_child` method automatically sets up converters between</span>
+<span class="sd">        the newly created level and all other levels in its tree.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fst: A Pynini transducer which derives forms at the child level</span>
+<span class="sd">                from forms at this one.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The newly created level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Level</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">fst</span><span class="o">=</span><span class="n">fst</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Level.rewrite"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.rewrite">[docs]</a>    <span class="k">def</span> <span class="nf">rewrite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">,</span> <span class="n">left_environment</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">right_environment</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">direction</span><span class="o">=</span><span class="s2">&quot;ltr&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;obl&quot;</span><span class="p">,</span> <span class="n">added_symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Level&#39;</span><span class="p">:</span>
+        <span class="c1">#pylint: disable=too-many-arguments</span>
+        <span class="sd">&quot;&quot;&quot; Create a level derived from this one by a context-dependent</span>
+<span class="sd">        rewrite rule.</span>
+
+<span class="sd">        This method wraps the built-in Pynini :meth:`pynini.cdrewrite`</span>
+<span class="sd">        method. It provides friendlier argument names (in particular, avoiding</span>
+<span class="sd">        the keyword `lambda`), takes care of specifying the correct</span>
+<span class="sd">        `sigma_star`, and ensures that the result is a :class:`Level` object</span>
+<span class="sd">        instead of a bare Fst.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            change: A pynini transducer representing the change to</span>
+<span class="sd">                be made.</span>
+<span class="sd">            left_environment: A pynini acceptor or string</span>
+<span class="sd">                representing the left environment for the change.</span>
+<span class="sd">            right_environment: A pynini acceptor or</span>
+<span class="sd">                string representing the right environment for the change.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The newly created level.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">added_symbols</span><span class="p">:</span>
+            <span class="n">added_symbols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">new_lower_sigma</span> <span class="o">=</span> <span class="n">u</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">m</span><span class="p">(</span><span class="n">added_symbols</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span>
+            <span class="n">pynini</span><span class="o">.</span><span class="n">cdrewrite</span><span class="p">(</span>
+                <span class="n">change</span><span class="p">,</span>
+                <span class="n">left_environment</span><span class="p">,</span>
+                <span class="n">right_environment</span><span class="p">,</span>
+                <span class="n">sigma_star</span><span class="o">=</span><span class="n">new_lower_sigma</span><span class="o">.</span><span class="n">star</span><span class="p">,</span>
+                <span class="n">direction</span><span class="o">=</span><span class="n">direction</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Level.walk"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.walk">[docs]</a>    <span class="k">def</span> <span class="nf">walk</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="s1">&#39;Level&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Breadth-first traversal of this level and its children.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            The next level in the breadth-first traversal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">walk</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">node</span></div>
+
+<div class="viewcode-block" id="Level.walk_with_depth"><a class="viewcode-back" href="../../index.html#cloudburst.language.Level.walk_with_depth">[docs]</a>    <span class="k">def</span> <span class="nf">walk_with_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="s1">&#39;Level&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+                                                           <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Breadth-first traversal of this level and its children, keeping</span>
+<span class="sd">        track of the depth within the tree. Used to pretty-print the levels</span>
+<span class="sd">        that make up a Language.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            The next level in the breadth-first traversal, and a number</span>
+<span class="sd">            indicating its depth, yielded as a tuple.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">yield</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">childnode</span><span class="p">,</span> <span class="n">childlevel</span><span class="p">)</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">walk_with_depth</span><span class="p">(</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="p">(</span><span class="n">childnode</span><span class="p">,</span> <span class="n">childlevel</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="Form"><a class="viewcode-back" href="../../index.html#cloudburst.language.Form">[docs]</a><span class="k">class</span> <span class="nc">Form</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">        values: An iterable containing a single key-level</span>
+<span class="sd">            representation to create an unambiguous form, or multiple key-level</span>
+<span class="sd">            representations to create an ambiguous one.</span>
+<span class="sd">        levels_to_show: An ordered list</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">levels_to_show</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Level</span><span class="p">],</span>
+                 <span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levels_to_show</span> <span class="o">=</span> <span class="n">levels_to_show</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Form</span><span class="p">(</span><span class="n">levels_to_show</span><span class="o">=</span><span class="p">[],</span> <span class="n">values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Form</span><span class="p">(</span><span class="n">levels_to_show</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_to_show</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">levels_to_show</span><span class="p">),</span>
+                    <span class="n">values</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">&amp;</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__rshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Level</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Form</span><span class="p">(</span><span class="n">levels_to_show</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_to_show</span> <span class="o">+</span> <span class="p">[</span><span class="n">other</span><span class="p">],</span>
+                    <span class="n">values</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_levels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_to_show</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_issue_ambiguity_warnings</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">reading</span> <span class="ow">in</span> <span class="n">readings</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">representation</span> <span class="ow">in</span> <span class="n">reading</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">representation</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">def</span> <span class="nf">_issue_ambiguity_warnings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">renderings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Issue warnings for several kinds of ambiguity. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">renderings</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Rendering a form that is ambiguous at the requested level&quot;</span><span class="p">,</span>
+                 <span class="n">SurfaceAmbiguityWarning</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Rendering a form that is ambiguous at the root level, but&quot;</span>
+                 <span class="s2">&quot;not at the requested level&quot;</span><span class="p">,</span>
+                 <span class="n">UnderlyingAmbiguityWarning</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Form.is_ambiguous"><a class="viewcode-back" href="../../index.html#cloudburst.language.Form.is_ambiguous">[docs]</a>    <span class="k">def</span> <span class="nf">is_ambiguous</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; True if this Form is ambiguous --- i.e., if it is consistent with</span>
+<span class="sd">        multiple underlying root representations. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Form.at_level"><a class="viewcode-back" href="../../index.html#cloudburst.language.Form.at_level">[docs]</a>    <span class="k">def</span> <span class="nf">at_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="n">Level</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot; The set of renderings of this form at a given level. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">at_levels</span><span class="p">([</span><span class="n">level</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Form.at_levels"><a class="viewcode-back" href="../../index.html#cloudburst.language.Form.at_levels">[docs]</a>    <span class="k">def</span> <span class="nf">at_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">levels</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Level</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot; The set of *lists* of renderings of this form at a given *list* of</span>
+<span class="sd">        levels.&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="n">level</span><span class="o">.</span><span class="n">fmt</span><span class="p">(</span><span class="n">apply_down</span><span class="p">(</span><span class="n">level</span><span class="o">.</span><span class="n">language</span><span class="o">.</span><span class="n">converters</span><span class="p">[</span><span class="n">level</span><span class="p">],</span>
+                                     <span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="c1"># TODO: THIS IS A FUCKING HACK, and presupposes that apply_down</span>
+                <span class="c1"># will only return a one-item set. We are never actually</span>
+                <span class="c1"># enforcing the downward-unambiguousness of derivations, so we</span>
+                <span class="c1"># probably shouldn&#39;t presuppose that.</span>
+                <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span>
+            <span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div></div>
+
+
+
+
+
+
+
+
+
+<div class="viewcode-block" id="SurfaceAmbiguityWarning"><a class="viewcode-back" href="../../index.html#cloudburst.language.SurfaceAmbiguityWarning">[docs]</a><span class="k">class</span> <span class="nc">SurfaceAmbiguityWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A rendering has been requested of a Form that is ambiguous at some of</span>
+<span class="sd">    the requested Levels. &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="UnderlyingAmbiguityWarning"><a class="viewcode-back" href="../../index.html#cloudburst.language.UnderlyingAmbiguityWarning">[docs]</a><span class="k">class</span> <span class="nc">UnderlyingAmbiguityWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A rendering has been requested of a Form that is ambiguous at the root</span>
+<span class="sd">    Level, but not at any of the requested Levels. &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="InconsistentForm"><a class="viewcode-back" href="../../index.html#cloudburst.language.InconsistentForm">[docs]</a><span class="k">class</span> <span class="nc">InconsistentForm</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Attempting to create a form that can&#39;t meet all the specified criteria.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="AmbiguousDerivation"><a class="viewcode-back" href="../../index.html#cloudburst.language.AmbiguousDerivation">[docs]</a><span class="k">class</span> <span class="nc">AmbiguousDerivation</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Attempting to create a level with a derivation that is downward</span>
+<span class="sd">    ambiguous.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Cloudburst</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/examples.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Leah Velleman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

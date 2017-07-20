@@ -42,8 +42,20 @@ a.current.reference.internal:hover {
     border: none;
 }
 
-body {
-    font-family: "calibri";
+body, div.body p {
+    font-family: "brill";
+}
+
+div.body h1, div.body h2, div.body h3, div.body h4, div.body h5, div.body h6 {
+    font-family: "brill";
+}
+
+strong {
+    font-family: "brill";
+}
+
+pre, tt, code {
+    font-family: "consolas";
 }
 
 table.field-list th {

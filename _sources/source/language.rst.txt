@@ -1,7 +1,7 @@
 language module
 ===============
 
-.. automodule:: language
+.. automodule:: cloudburst.language
     :members:
     :undoc-members:
     :show-inheritance:

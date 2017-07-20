@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>word &#8212; Cloudburst 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for word</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># TODO:</span>
+
+<span class="sd">  EASY DISPLAY STUFF</span>
+<span class="sd">   &quot;Back&quot; links from lexicon entries</span>
+<span class="sd">   </span>
+<span class="sd">   Permalinks to paragraphs using pilcrow symbol, and give paragraph numbers in the</span>
+<span class="sd">   lexical index instead of source code line numbers. (Or have a setting for this?)</span>
+
+<span class="sd">   Make section permalinks use the section symbol and appear to the left of the</span>
+<span class="sd">   sec hed.</span>
+
+<span class="sd">  MEDIUM DISPLAY STUFF </span>
+
+<span class="sd">   Why aren&#39;t starred wordforms getting &lt;em&gt;&#39;d?</span>
+
+<span class="sd">   Figure out how to link indexible words to the section where they&#39;re defined.</span>
+
+<span class="sd">  BASIC INNARDS</span>
+<span class="sd">   </span>
+<span class="sd">   Get a consistent approach to building content. </span>
+<span class="sd">   Set up the wordlist-generating functions properly, with a class and properties</span>
+<span class="sd">   instead of just passing a bunch of references around.</span>
+
+<span class="sd">  HARDER STUFF</span>
+<span class="sd">   Start using pynini for lemmatization, even if all we do is transduce every</span>
+<span class="sd">   word to itself. </span>
+
+<span class="sd">   Then start getting a bit smarter about lemmatization. If a lex entry lists</span>
+<span class="sd">   principal parts explicitly, can we link from them to it correctly?</span>
+
+<span class="sd">   What would it take to correctly lemmatize words under stress push?</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># TODO: Docstrings</span>
+<span class="c1"># TODO: Can we somehow make this project autodoc itself?</span>
+<span class="c1"># TODO: Put up at readthedocs.io?</span>
+
+<span class="kn">from</span> <span class="nn">docutils</span> <span class="k">import</span> <span class="n">nodes</span>
+<span class="kn">from</span> <span class="nn">docutils.parsers.rst</span> <span class="k">import</span> <span class="n">Directive</span>
+<span class="kn">from</span> <span class="nn">sphinx.locale</span> <span class="k">import</span> <span class="n">_</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">encodings</span> <span class="k">import</span> <span class="n">punycode</span>
+<span class="kn">from</span> <span class="nn">unidecode</span> <span class="k">import</span> <span class="n">unidecode</span>
+
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../source/word.html#word.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">wordlist</span><span class="p">)</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">word</span><span class="p">,</span>
+      <span class="n">html</span><span class="o">=</span><span class="p">(</span><span class="n">visit_word_node</span><span class="p">,</span> <span class="n">depart_word_node</span><span class="p">),</span>
+      <span class="n">text</span><span class="o">=</span><span class="p">(</span><span class="n">visit_word_node</span><span class="p">,</span> <span class="n">depart_word_node</span><span class="p">),</span>
+      <span class="n">latex</span><span class="o">=</span><span class="p">(</span><span class="n">visit_word_node</span><span class="p">,</span> <span class="n">depart_word_node</span><span class="p">))</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_role</span><span class="p">(</span><span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">word_role</span><span class="p">)</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_directive</span><span class="p">(</span><span class="s1">&#39;wordlist&#39;</span><span class="p">,</span> <span class="n">WordlistDirective</span><span class="p">)</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_directive</span><span class="p">(</span><span class="s1">&#39;lemma&#39;</span><span class="p">,</span> <span class="n">LemmaDirective</span><span class="p">)</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;doctree-resolved&#39;</span><span class="p">,</span> <span class="n">process_word_nodes</span><span class="p">)</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;env-purge-doc&#39;</span><span class="p">,</span> <span class="n">purge_words</span><span class="p">)</span>
+  <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="s1">&#39;0.1&#39;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="word"><a class="viewcode-back" href="../source/word.html#word.word">[docs]</a><span class="k">class</span> <span class="nc">word</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
+  <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="wordlist"><a class="viewcode-back" href="../source/word.html#word.wordlist">[docs]</a><span class="k">class</span> <span class="nc">wordlist</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">General</span><span class="p">,</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Element</span><span class="p">):</span>
+  <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="visit_word_node"><a class="viewcode-back" href="../source/word.html#word.visit_word_node">[docs]</a><span class="k">def</span> <span class="nf">visit_word_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">visit_emphasis</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="depart_word_node"><a class="viewcode-back" href="../source/word.html#word.depart_word_node">[docs]</a><span class="k">def</span> <span class="nf">depart_word_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+  <span class="bp">self</span><span class="o">.</span><span class="n">depart_emphasis</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="word_role"><a class="viewcode-back" href="../source/word.html#word.word_role">[docs]</a><span class="k">def</span> <span class="nf">word_role</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">rawtext</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">inliner</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{},</span> <span class="n">content</span><span class="o">=</span><span class="p">[]):</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">inliner</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">env</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">app</span>
+  <span class="k">if</span> <span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">nodes</span><span class="o">.</span><span class="n">strong</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="n">text</span><span class="p">)),</span> <span class="p">[]</span> <span class="c1">#WHY IS THIS NOT WORKING?</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;cloudburst_words&#39;</span><span class="p">):</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+  <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+    <span class="n">targetid</span> <span class="o">=</span> <span class="s2">&quot;word-</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">env</span><span class="o">.</span><span class="n">new_serialno</span><span class="p">(</span><span class="s1">&#39;word&#39;</span><span class="p">)</span>
+    <span class="n">targetnode</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">target</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="n">targetid</span><span class="p">])</span>
+    <span class="n">lemma</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">wordnode</span> <span class="o">=</span> <span class="n">make_lexicon_link</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+      <span class="s1">&#39;docname&#39;</span><span class="p">:</span> <span class="n">env</span><span class="o">.</span><span class="n">docname</span><span class="p">,</span>
+      <span class="s1">&#39;lineno&#39;</span><span class="p">:</span> <span class="n">lineno</span><span class="p">,</span>
+      <span class="s1">&#39;wordnode&#39;</span><span class="p">:</span> <span class="n">wordnode</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(),</span>
+      <span class="s1">&#39;targetnode&#39;</span><span class="p">:</span> <span class="n">targetnode</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">targetnode</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wordnode</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="make_lexicon_link"><a class="viewcode-back" href="../source/word.html#word.make_lexicon_link">[docs]</a><span class="k">def</span> <span class="nf">make_lexicon_link</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+  <span class="n">node</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">reference</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">refid</span><span class="o">=</span><span class="s1">&#39;lexicon-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">punycode</span><span class="o">.</span><span class="n">punycode_encode</span><span class="p">(</span><span class="n">lemma</span><span class="p">),</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+  <span class="n">innernode</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">emphasis</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+  <span class="n">node</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">innernode</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">node</span></div>
+
+<div class="viewcode-block" id="WordlistDirective"><a class="viewcode-back" href="../source/word.html#word.WordlistDirective">[docs]</a><span class="k">class</span> <span class="nc">WordlistDirective</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
+<div class="viewcode-block" id="WordlistDirective.run"><a class="viewcode-back" href="../source/word.html#word.WordlistDirective.run">[docs]</a>  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">wordlist</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)]</span></div></div>
+
+<div class="viewcode-block" id="LemmaDirective"><a class="viewcode-back" href="../source/word.html#word.LemmaDirective">[docs]</a><span class="k">class</span> <span class="nc">LemmaDirective</span><span class="p">(</span><span class="n">Directive</span><span class="p">):</span>
+  <span class="n">has_content</span> <span class="o">=</span> <span class="kc">True</span>
+
+  <span class="n">option_spec</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;headword&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+    <span class="s1">&#39;rel&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span>
+  <span class="p">}</span>
+
+<div class="viewcode-block" id="LemmaDirective.run"><a class="viewcode-back" href="../source/word.html#word.LemmaDirective.run">[docs]</a>  <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">env</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;cloudburst_lemmas&#39;</span><span class="p">):</span>
+      <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">lemma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">[</span><span class="n">lemma</span><span class="p">][</span><span class="s1">&#39;docname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">docname</span><span class="p">,</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">[</span><span class="n">lemma</span><span class="p">][</span><span class="s1">&#39;definition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="p">[]</span></div></div>
+
+<div class="viewcode-block" id="purge_words"><a class="viewcode-back" href="../source/word.html#word.purge_words">[docs]</a><span class="k">def</span> <span class="nf">purge_words</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">docname</span><span class="p">):</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;cloudburst_words&#39;</span><span class="p">):</span>
+    <span class="k">return</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">lemma</span><span class="p">,</span> <span class="n">wordtokens</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span> <span class="o">==</span> <span class="p">[]:</span>
+      <span class="k">del</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> 
+          <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span> 
+          <span class="k">if</span> <span class="n">word</span><span class="p">[</span><span class="s1">&#39;docname&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">docname</span><span class="p">]</span>
+  <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span> <span class="o">=</span> <span class="p">{</span><span class="n">lemma</span><span class="p">:</span> <span class="n">features</span> 
+      <span class="k">for</span> <span class="p">(</span><span class="n">lemma</span><span class="p">,</span> <span class="n">features</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> 
+      <span class="k">if</span> <span class="n">features</span><span class="p">[</span><span class="s1">&#39;docname&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">docname</span><span class="p">}</span></div>
+  
+<div class="viewcode-block" id="process_word_nodes"><a class="viewcode-back" href="../source/word.html#word.process_word_nodes">[docs]</a><span class="k">def</span> <span class="nf">process_word_nodes</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">):</span>
+  <span class="n">resolve_lexical_entries</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">doctree</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">doctree</span><span class="o">.</span><span class="n">traverse</span><span class="p">(</span><span class="n">wordlist</span><span class="p">):</span>
+    <span class="n">process_wordlist</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="resolve_lexical_entries"><a class="viewcode-back" href="../source/word.html#word.resolve_lexical_entries">[docs]</a><span class="k">def</span> <span class="nf">resolve_lexical_entries</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">env</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">lemma</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s1">&#39;headword&#39;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="ow">and</span> <span class="s1">&#39;rel&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+      <span class="n">headwordlemma</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;headword&#39;</span><span class="p">]</span>
+      <span class="n">headwordentry</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">[</span><span class="n">headwordlemma</span><span class="p">]</span>
+      <span class="n">rel</span> <span class="o">=</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">headwordentry</span><span class="p">,</span> <span class="s1">&#39;subentries&#39;</span><span class="p">):</span>
+        <span class="n">headwordentry</span><span class="p">[</span><span class="s1">&#39;subentries&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">headwordentry</span><span class="p">[</span><span class="s1">&#39;subentries&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">rel</span><span class="p">,</span> <span class="n">lemma</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="process_wordlist"><a class="viewcode-back" href="../source/word.html#word.process_wordlist">[docs]</a><span class="k">def</span> <span class="nf">process_wordlist</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">env</span>
+  <span class="n">content</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">head</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+  <span class="n">head</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">&quot;Lexicon&quot;</span><span class="p">,</span> <span class="s2">&quot;Lexicon&quot;</span><span class="p">))</span>
+  <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">head</span><span class="p">)</span>
+  <span class="c1"># In case there are no lemmas specified in our environment TODO: maybe this should go in an init funciton instead?</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="s1">&#39;cloudburst_lemmas&#39;</span><span class="p">):</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="c1"># TODO: This seems wrong: doesn&#39;t generate an anchor properly, for instance.</span>
+  <span class="k">for</span> <span class="n">lemma</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">unidecode</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">+</span><span class="n">l</span><span class="p">):</span>
+    <span class="n">content</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">make_wordlist_entry</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">lemma</span><span class="p">))</span>
+  <span class="n">node</span><span class="o">.</span><span class="n">replace_self</span><span class="p">(</span><span class="n">content</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="make_wordlist_entry"><a class="viewcode-back" href="../source/word.html#word.make_wordlist_entry">[docs]</a><span class="k">def</span> <span class="nf">make_wordlist_entry</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">subentry</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">env</span>
+  <span class="n">wordtokens</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_words</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span>
+  <span class="n">para</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">paragraph</span><span class="p">()</span>
+  <span class="n">para</span> <span class="o">+=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">lemma</span><span class="p">,</span> <span class="n">lemma</span><span class="p">)</span>
+  <span class="n">para</span> <span class="o">+=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">target</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;lexicon-</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">punycode</span><span class="o">.</span><span class="n">punycode_encode</span><span class="p">(</span><span class="n">lemma</span><span class="p">))])</span>
+  <span class="k">if</span> <span class="n">lemma</span> <span class="ow">in</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">:</span>
+    <span class="n">entry</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">cloudburst_lemmas</span><span class="p">[</span><span class="n">lemma</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;headword&#39;</span> <span class="ow">in</span> <span class="n">entry</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">subentry</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">nodes</span><span class="o">.</span><span class="n">paragraph</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;definition&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+      <span class="n">para</span> <span class="o">+=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;definition&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">_</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;definition&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">make_wordlist_references</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">wordtokens</span><span class="p">):</span>
+      <span class="n">para</span> <span class="o">+=</span> <span class="n">node</span>
+    <span class="k">if</span> <span class="s1">&#39;subentries&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="n">subentrylemma</span><span class="p">)</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s1">&#39;subentries&#39;</span><span class="p">]:</span>
+        <span class="n">para</span> <span class="o">+=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">rel</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+        <span class="n">para</span> <span class="o">+=</span> <span class="n">make_wordlist_entry</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">subentrylemma</span><span class="p">,</span> <span class="n">subentry</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">para</span></div>
+
+<div class="viewcode-block" id="make_wordlist_references"><a class="viewcode-back" href="../source/word.html#word.make_wordlist_references">[docs]</a><span class="k">def</span> <span class="nf">make_wordlist_references</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">doctree</span><span class="p">,</span> <span class="n">fromdocname</span><span class="p">,</span> <span class="n">lemma</span><span class="p">,</span> <span class="n">wordtokens</span><span class="p">):</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">env</span>
+  <span class="n">nodelist</span> <span class="o">=</span> <span class="p">[</span><span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">&quot; (&quot;</span><span class="p">,</span> <span class="s2">&quot; (&quot;</span><span class="p">)]</span>
+  <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+  <span class="k">for</span> <span class="n">wordtoken</span> <span class="ow">in</span> <span class="n">wordtokens</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">first</span><span class="p">:</span>
+      <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">nodelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">))</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">doc2path</span><span class="p">(</span><span class="n">wordtoken</span><span class="p">[</span><span class="s1">&#39;docname&#39;</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">lineno</span> <span class="o">=</span> <span class="n">wordtoken</span><span class="p">[</span><span class="s1">&#39;lineno&#39;</span><span class="p">]</span>
+    <span class="n">newnode</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">reference</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">innernode</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">emphasis</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lineno</span><span class="p">)),</span> <span class="n">_</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">lineno</span><span class="p">)))</span>
+    <span class="n">newnode</span><span class="p">[</span><span class="s1">&#39;refdocname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wordtoken</span><span class="p">[</span><span class="s1">&#39;docname&#39;</span><span class="p">]</span>
+    <span class="n">newnode</span><span class="p">[</span><span class="s1">&#39;refuri&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">builder</span><span class="o">.</span><span class="n">get_relative_uri</span><span class="p">(</span><span class="n">fromdocname</span><span class="p">,</span> <span class="n">wordtoken</span><span class="p">[</span><span class="s1">&#39;docname&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">wordtoken</span><span class="p">[</span><span class="s1">&#39;targetnode&#39;</span><span class="p">][</span><span class="s1">&#39;ids&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">newnode</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">innernode</span><span class="p">)</span>
+    <span class="n">nodelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newnode</span><span class="p">)</span>
+  <span class="n">nodelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;.)&#39;</span><span class="p">,</span> <span class="s1">&#39;.)&#39;</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">nodelist</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Cloudburst</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloudburst.html">Cloudburst</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/examples.html">Examples</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Leah Velleman.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
